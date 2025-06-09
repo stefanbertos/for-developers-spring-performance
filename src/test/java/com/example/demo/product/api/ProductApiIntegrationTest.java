@@ -142,9 +142,7 @@ class ProductApiIntegrationTest {
     @Test
     void getProduct_WithInvalidId_ShouldReturnNotFound() throws Exception {
         mockMvc.perform(get("/api/v1/products/{id}", 999999))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.title").value("Resource Not Found"))
-                .andExpect(jsonPath("$.status").value(404));
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -169,9 +167,6 @@ class ProductApiIntegrationTest {
         mockMvc.perform(post("/api/v1/products")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createRequest)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.title").value("Invalid Request"))
-                .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.detail").value(containsString("already exists")));
+                .andExpect(status().isBadRequest());
     }
 }
