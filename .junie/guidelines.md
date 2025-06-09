@@ -5,6 +5,7 @@
 
 ## Project Structure
 * **Packaging:** Strongly prefer a **package-by-feature** structure over package-by-layer. This means grouping all code related to a specific feature or domain concept in the same package.
+* Follow the Spring Modulith approach https://spring.io/projects/spring-modulith 
 
 ## Lombok Usage
 * **Lombok Usage:**
@@ -95,6 +96,7 @@ logger.atDebug()
 
 ## 18. HTTP Clients
 * **Outgoing HTTP Requests:** Use the Spring Framework 6+ **`RestClient`** for making synchronous or asynchronous HTTP calls
+* Add default retry with reasonable retry policy
 
 ## 19. REST Controllers
 * **Limit Records Returned:** Don't create controllers with methods where clients can retrieve unlimited number of records. Use pageable option.
@@ -113,3 +115,6 @@ logger.atDebug()
 * **Functional Interfaces:** Use functional interfaces and lambda expressions for cleaner code.
 * **Pattern Matching:** Utilize pattern matching for instanceof (Java 16+) where applicable.
 * **Variable Declaration:** Use the Java var variable declaration wherever possible.
+
+## 21. Code coverage
+* Unit coverage must be 100%

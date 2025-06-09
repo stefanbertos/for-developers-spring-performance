@@ -1,12 +1,5 @@
 # for-developers-spring-performance
-1. goal is to showcase that Spring Boot is a good choice for performance-critical applications
-2. What are the options we can use? GraalVM, Java 25, Reactive, Virtual Threads, ... profiler
-   https://medium.com/@mohitbajaj1995/how-i-optimized-a-spring-boot-application-to-handle-1m-requests-second-0cbb2f2823ed
-   To measure actual live metrics in your Spring Boot app, use:
-
-Micrometer for instrumentation (built into Spring Boot Actuator)
-
-Prometheus to scrape metrics
-
-Grafana to visualize RPM, latency, etc.
+1. POC in Spring to showcase the product catalog which is used in many ecommerce applications
+2. Example will use Java with Virtual Threads and will focus on performance using metrics and profiler tools
+3. There will be a alternative implementation in separate branch or repo with Reactive style
 
