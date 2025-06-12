@@ -18,6 +18,10 @@ spring:
     baseline-on-migrate: true
     locations: classpath:db/migration
 
+  threads:
+    virtual:
+      enabled: true
+
 # Actuator configuration
 management:
   endpoints:
