@@ -27,248 +27,232 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
 
-    @Mock
-    private ProductRepository productRepository;
+	@Mock
+	private ProductRepository productRepository;
 
-    @InjectMocks
-    private ProductService productService;
+	@InjectMocks
+	private ProductService productService;
 
-    private Product product;
-    private ProductRequest productRequest;
+	private Product product;
 
-    @BeforeEach
-    void setUp() {
-        // Setup test product
-        product = new Product(
-                "Test Product",
-                "Test Description",
-                new BigDecimal("99.99"),
-                "Test Category",
-                "https://example.com/test.jpg",
-                true
-        );
-        // Use reflection to set the ID field
-        try {
-            var field = Product.class.getDeclaredField("id");
-            field.setAccessible(true);
-            field.set(product, 1L);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to set product ID", e);
-        }
+	private ProductRequest productRequest;
 
-        // Setup test product request
-        productRequest = new ProductRequest(
-                "Test Product",
-                "Test Description",
-                new BigDecimal("99.99"),
-                "Test Category",
-                "https://example.com/test.jpg",
-                true
-        );
-    }
+	@BeforeEach
+	void setUp() {
+		// Setup test product
+		product = new Product("Test Product", "Test Description", new BigDecimal("99.99"), "Test Category",
+				"https://example.com/test.jpg", true);
+		// Use reflection to set the ID field
+		try {
+			var field = Product.class.getDeclaredField("id");
+			field.setAccessible(true);
+			field.set(product, 1L);
+		}
+		catch (Exception e) {
+			throw new RuntimeException("Failed to set product ID", e);
+		}
 
-    @Test
-    void getAllProducts_ShouldReturnPageOfProducts() {
-        // Arrange
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Product> productPage = new PageImpl<>(List.of(product), pageable, 1);
-        when(productRepository.findAll(pageable)).thenReturn(productPage);
+		// Setup test product request
+		productRequest = new ProductRequest("Test Product", "Test Description", new BigDecimal("99.99"),
+				"Test Category", "https://example.com/test.jpg", true);
+	}
 
-        // Act
-        Page<ProductResponse> result = productService.getAllProducts(pageable);
+	@Test
+	void getAllProducts_ShouldReturnPageOfProducts() {
+		// Arrange
+		Pageable pageable = PageRequest.of(0, 10);
+		Page<Product> productPage = new PageImpl<>(List.of(product), pageable, 1);
+		when(productRepository.findAll(pageable)).thenReturn(productPage);
 
-        // Assert
-        assertThat(result).isNotNull();
-        assertThat(result.getContent()).hasSize(1);
-        assertThat(result.getContent().get(0).name()).isEqualTo(product.getName());
-        verify(productRepository).findAll(pageable);
-    }
+		// Act
+		Page<ProductResponse> result = productService.getAllProducts(pageable);
 
-    @Test
-    void getProductsByCategory_ShouldReturnPageOfProductsInCategory() {
-        // Arrange
-        String category = "Test Category";
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Product> productPage = new PageImpl<>(List.of(product), pageable, 1);
-        when(productRepository.findByCategory(category, pageable)).thenReturn(productPage);
+		// Assert
+		assertThat(result).isNotNull();
+		assertThat(result.getContent()).hasSize(1);
+		assertThat(result.getContent().get(0).name()).isEqualTo(product.getName());
+		verify(productRepository).findAll(pageable);
+	}
 
-        // Act
-        Page<ProductResponse> result = productService.getProductsByCategory(category, pageable);
+	@Test
+	void getProductsByCategory_ShouldReturnPageOfProductsInCategory() {
+		// Arrange
+		String category = "Test Category";
+		Pageable pageable = PageRequest.of(0, 10);
+		Page<Product> productPage = new PageImpl<>(List.of(product), pageable, 1);
+		when(productRepository.findByCategory(category, pageable)).thenReturn(productPage);
 
-        // Assert
-        assertThat(result).isNotNull();
-        assertThat(result.getContent()).hasSize(1);
-        assertThat(result.getContent().get(0).category()).isEqualTo(category);
-        verify(productRepository).findByCategory(category, pageable);
-    }
+		// Act
+		Page<ProductResponse> result = productService.getProductsByCategory(category, pageable);
 
-    @Test
-    void getProductsByName_ShouldReturnPageOfProductsWithNameContaining() {
-        // Arrange
-        String name = "Test";
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Product> productPage = new PageImpl<>(List.of(product), pageable, 1);
-        when(productRepository.findByNameContainingIgnoreCase(name, pageable)).thenReturn(productPage);
+		// Assert
+		assertThat(result).isNotNull();
+		assertThat(result.getContent()).hasSize(1);
+		assertThat(result.getContent().get(0).category()).isEqualTo(category);
+		verify(productRepository).findByCategory(category, pageable);
+	}
 
-        // Act
-        Page<ProductResponse> result = productService.getProductsByName(name, pageable);
+	@Test
+	void getProductsByName_ShouldReturnPageOfProductsWithNameContaining() {
+		// Arrange
+		String name = "Test";
+		Pageable pageable = PageRequest.of(0, 10);
+		Page<Product> productPage = new PageImpl<>(List.of(product), pageable, 1);
+		when(productRepository.findByNameContainingIgnoreCase(name, pageable)).thenReturn(productPage);
 
-        // Assert
-        assertThat(result).isNotNull();
-        assertThat(result.getContent()).hasSize(1);
-        assertThat(result.getContent().get(0).name()).contains(name);
-        verify(productRepository).findByNameContainingIgnoreCase(name, pageable);
-    }
+		// Act
+		Page<ProductResponse> result = productService.getProductsByName(name, pageable);
 
-    @Test
-    void getProductById_WhenProductExists_ShouldReturnProduct() {
-        // Arrange
-        Long id = 1L;
-        when(productRepository.findById(id)).thenReturn(Optional.of(product));
+		// Assert
+		assertThat(result).isNotNull();
+		assertThat(result.getContent()).hasSize(1);
+		assertThat(result.getContent().get(0).name()).contains(name);
+		verify(productRepository).findByNameContainingIgnoreCase(name, pageable);
+	}
 
-        // Act
-        ProductResponse result = productService.getProductById(id);
+	@Test
+	void getProductById_WhenProductExists_ShouldReturnProduct() {
+		// Arrange
+		Long id = 1L;
+		when(productRepository.findById(id)).thenReturn(Optional.of(product));
 
-        // Assert
-        assertThat(result).isNotNull();
-        assertThat(result.id()).isEqualTo(id);
-        verify(productRepository).findById(id);
-    }
+		// Act
+		ProductResponse result = productService.getProductById(id);
 
-    @Test
-    void getProductById_WhenProductDoesNotExist_ShouldThrowException() {
-        // Arrange
-        Long id = 999L;
-        when(productRepository.findById(id)).thenReturn(Optional.empty());
+		// Assert
+		assertThat(result).isNotNull();
+		assertThat(result.id()).isEqualTo(id);
+		verify(productRepository).findById(id);
+	}
 
-        // Act & Assert
-        assertThatThrownBy(() -> productService.getProductById(id))
-                .isInstanceOf(EntityNotFoundException.class)
-                .hasMessageContaining("Product not found with ID: " + id);
-        verify(productRepository).findById(id);
-    }
+	@Test
+	void getProductById_WhenProductDoesNotExist_ShouldThrowException() {
+		// Arrange
+		Long id = 999L;
+		when(productRepository.findById(id)).thenReturn(Optional.empty());
 
-    @Test
-    void createProduct_WhenNameIsUnique_ShouldCreateProduct() {
-        // Arrange
-        when(productRepository.findByNameIgnoreCase(productRequest.name())).thenReturn(Optional.empty());
-        when(productRepository.save(any(Product.class))).thenReturn(product);
+		// Act & Assert
+		assertThatThrownBy(() -> productService.getProductById(id)).isInstanceOf(EntityNotFoundException.class)
+			.hasMessageContaining("Product not found with ID: " + id);
+		verify(productRepository).findById(id);
+	}
 
-        // Act
-        ProductResponse result = productService.createProduct(productRequest);
+	@Test
+	void createProduct_WhenNameIsUnique_ShouldCreateProduct() {
+		// Arrange
+		when(productRepository.findByNameIgnoreCase(productRequest.name())).thenReturn(Optional.empty());
+		when(productRepository.save(any(Product.class))).thenReturn(product);
 
-        // Assert
-        assertThat(result).isNotNull();
-        assertThat(result.name()).isEqualTo(productRequest.name());
-        verify(productRepository).findByNameIgnoreCase(productRequest.name());
-        verify(productRepository).save(any(Product.class));
-    }
+		// Act
+		ProductResponse result = productService.createProduct(productRequest);
 
-    @Test
-    void createProduct_WhenNameExists_ShouldThrowException() {
-        // Arrange
-        when(productRepository.findByNameIgnoreCase(productRequest.name())).thenReturn(Optional.of(product));
+		// Assert
+		assertThat(result).isNotNull();
+		assertThat(result.name()).isEqualTo(productRequest.name());
+		verify(productRepository).findByNameIgnoreCase(productRequest.name());
+		verify(productRepository).save(any(Product.class));
+	}
 
-        // Act & Assert
-        assertThatThrownBy(() -> productService.createProduct(productRequest))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Product with name '" + productRequest.name() + "' already exists");
-        verify(productRepository).findByNameIgnoreCase(productRequest.name());
-        verify(productRepository, never()).save(any(Product.class));
-    }
+	@Test
+	void createProduct_WhenNameExists_ShouldThrowException() {
+		// Arrange
+		when(productRepository.findByNameIgnoreCase(productRequest.name())).thenReturn(Optional.of(product));
 
-    @Test
-    void updateProduct_WhenProductExistsAndNameIsUnique_ShouldUpdateProduct() {
-        // Arrange
-        Long id = 1L;
-        when(productRepository.findById(id)).thenReturn(Optional.of(product));
-        when(productRepository.findByNameIgnoreCase(productRequest.name())).thenReturn(Optional.empty());
-        when(productRepository.save(any(Product.class))).thenReturn(product);
+		// Act & Assert
+		assertThatThrownBy(() -> productService.createProduct(productRequest))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessageContaining("Product with name '" + productRequest.name() + "' already exists");
+		verify(productRepository).findByNameIgnoreCase(productRequest.name());
+		verify(productRepository, never()).save(any(Product.class));
+	}
 
-        // Act
-        ProductResponse result = productService.updateProduct(id, productRequest);
+	@Test
+	void updateProduct_WhenProductExistsAndNameIsUnique_ShouldUpdateProduct() {
+		// Arrange
+		Long id = 1L;
+		when(productRepository.findById(id)).thenReturn(Optional.of(product));
+		when(productRepository.findByNameIgnoreCase(productRequest.name())).thenReturn(Optional.empty());
+		when(productRepository.save(any(Product.class))).thenReturn(product);
 
-        // Assert
-        assertThat(result).isNotNull();
-        assertThat(result.id()).isEqualTo(id);
-        verify(productRepository).findById(id);
-        verify(productRepository).findByNameIgnoreCase(productRequest.name());
-        verify(productRepository).save(any(Product.class));
-    }
+		// Act
+		ProductResponse result = productService.updateProduct(id, productRequest);
 
-    @Test
-    void updateProduct_WhenProductDoesNotExist_ShouldThrowException() {
-        // Arrange
-        Long id = 999L;
-        when(productRepository.findById(id)).thenReturn(Optional.empty());
+		// Assert
+		assertThat(result).isNotNull();
+		assertThat(result.id()).isEqualTo(id);
+		verify(productRepository).findById(id);
+		verify(productRepository).findByNameIgnoreCase(productRequest.name());
+		verify(productRepository).save(any(Product.class));
+	}
 
-        // Act & Assert
-        assertThatThrownBy(() -> productService.updateProduct(id, productRequest))
-                .isInstanceOf(EntityNotFoundException.class)
-                .hasMessageContaining("Product not found with ID: " + id);
-        verify(productRepository).findById(id);
-        verify(productRepository, never()).save(any(Product.class));
-    }
+	@Test
+	void updateProduct_WhenProductDoesNotExist_ShouldThrowException() {
+		// Arrange
+		Long id = 999L;
+		when(productRepository.findById(id)).thenReturn(Optional.empty());
 
-    @Test
-    void updateProduct_WhenNameExistsForDifferentProduct_ShouldThrowException() {
-        // Arrange
-        Long id = 1L;
-        Product existingProduct = new Product(
-                productRequest.name(),
-                "Another Description",
-                new BigDecimal("199.99"),
-                "Another Category",
-                "https://example.com/another.jpg",
-                true
-        );
-        // Use reflection to set the ID field to a different ID
-        try {
-            var field = Product.class.getDeclaredField("id");
-            field.setAccessible(true);
-            field.set(existingProduct, 2L);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to set product ID", e);
-        }
+		// Act & Assert
+		assertThatThrownBy(() -> productService.updateProduct(id, productRequest))
+			.isInstanceOf(EntityNotFoundException.class)
+			.hasMessageContaining("Product not found with ID: " + id);
+		verify(productRepository).findById(id);
+		verify(productRepository, never()).save(any(Product.class));
+	}
 
-        when(productRepository.findById(id)).thenReturn(Optional.of(product));
-        when(productRepository.findByNameIgnoreCase(productRequest.name())).thenReturn(Optional.of(existingProduct));
+	@Test
+	void updateProduct_WhenNameExistsForDifferentProduct_ShouldThrowException() {
+		// Arrange
+		Long id = 1L;
+		Product existingProduct = new Product(productRequest.name(), "Another Description", new BigDecimal("199.99"),
+				"Another Category", "https://example.com/another.jpg", true);
+		// Use reflection to set the ID field to a different ID
+		try {
+			var field = Product.class.getDeclaredField("id");
+			field.setAccessible(true);
+			field.set(existingProduct, 2L);
+		}
+		catch (Exception e) {
+			throw new RuntimeException("Failed to set product ID", e);
+		}
 
-        // Act & Assert
-        assertThatThrownBy(() -> productService.updateProduct(id, productRequest))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Another product with name '" + productRequest.name() + "' already exists");
-        verify(productRepository).findById(id);
-        verify(productRepository).findByNameIgnoreCase(productRequest.name());
-        verify(productRepository, never()).save(any(Product.class));
-    }
+		when(productRepository.findById(id)).thenReturn(Optional.of(product));
+		when(productRepository.findByNameIgnoreCase(productRequest.name())).thenReturn(Optional.of(existingProduct));
 
-    @Test
-    void deleteProduct_WhenProductExists_ShouldDeleteProduct() {
-        // Arrange
-        Long id = 1L;
-        when(productRepository.existsById(id)).thenReturn(true);
-        doNothing().when(productRepository).deleteById(id);
+		// Act & Assert
+		assertThatThrownBy(() -> productService.updateProduct(id, productRequest))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessageContaining("Another product with name '" + productRequest.name() + "' already exists");
+		verify(productRepository).findById(id);
+		verify(productRepository).findByNameIgnoreCase(productRequest.name());
+		verify(productRepository, never()).save(any(Product.class));
+	}
 
-        // Act
-        productService.deleteProduct(id);
+	@Test
+	void deleteProduct_WhenProductExists_ShouldDeleteProduct() {
+		// Arrange
+		Long id = 1L;
+		when(productRepository.existsById(id)).thenReturn(true);
+		doNothing().when(productRepository).deleteById(id);
 
-        // Assert
-        verify(productRepository).existsById(id);
-        verify(productRepository).deleteById(id);
-    }
+		// Act
+		productService.deleteProduct(id);
 
-    @Test
-    void deleteProduct_WhenProductDoesNotExist_ShouldThrowException() {
-        // Arrange
-        Long id = 999L;
-        when(productRepository.existsById(id)).thenReturn(false);
+		// Assert
+		verify(productRepository).existsById(id);
+		verify(productRepository).deleteById(id);
+	}
 
-        // Act & Assert
-        assertThatThrownBy(() -> productService.deleteProduct(id))
-                .isInstanceOf(EntityNotFoundException.class)
-                .hasMessageContaining("Product not found with ID: " + id);
-        verify(productRepository).existsById(id);
-        verify(productRepository, never()).deleteById(any());
-    }
+	@Test
+	void deleteProduct_WhenProductDoesNotExist_ShouldThrowException() {
+		// Arrange
+		Long id = 999L;
+		when(productRepository.existsById(id)).thenReturn(false);
+
+		// Act & Assert
+		assertThatThrownBy(() -> productService.deleteProduct(id)).isInstanceOf(EntityNotFoundException.class)
+			.hasMessageContaining("Product not found with ID: " + id);
+		verify(productRepository).existsById(id);
+		verify(productRepository, never()).deleteById(any());
+	}
+
 }

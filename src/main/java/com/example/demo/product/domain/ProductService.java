@@ -18,151 +18,136 @@ import java.util.Optional;
 @Service
 public class ProductService {
 
-    private static final Logger log = LoggerFactory.getLogger(ProductService.class);
+	private static final Logger log = LoggerFactory.getLogger(ProductService.class);
 
-    private final ProductRepository productRepository;
+	private final ProductRepository productRepository;
 
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+	public ProductService(ProductRepository productRepository) {
+		this.productRepository = productRepository;
+	}
 
-    /**
-     * Get all products with pagination.
-     *
-     * @param pageable pagination information
-     * @return page of product responses
-     */
-    @Transactional(readOnly = true)
-    public Page<ProductResponse> getAllProducts(Pageable pageable) {
-        log.debug("Getting all products with pagination: {}", pageable);
-        return productRepository.findAll(pageable)
-                .map(ProductResponse::fromEntity);
-    }
+	/**
+	 * Get all products with pagination.
+	 * @param pageable pagination information
+	 * @return page of product responses
+	 */
+	@Transactional(readOnly = true)
+	public Page<ProductResponse> getAllProducts(Pageable pageable) {
+		log.debug("Getting all products with pagination: {}", pageable);
+		return productRepository.findAll(pageable).map(ProductResponse::fromEntity);
+	}
 
-    /**
-     * Get products by category with pagination.
-     *
-     * @param category category to filter by
-     * @param pageable pagination information
-     * @return page of product responses
-     */
-    @Transactional(readOnly = true)
-    public Page<ProductResponse> getProductsByCategory(String category, Pageable pageable) {
-        log.debug("Getting products by category: {} with pagination: {}", category, pageable);
-        return productRepository.findByCategory(category, pageable)
-                .map(ProductResponse::fromEntity);
-    }
+	/**
+	 * Get products by category with pagination.
+	 * @param category category to filter by
+	 * @param pageable pagination information
+	 * @return page of product responses
+	 */
+	@Transactional(readOnly = true)
+	public Page<ProductResponse> getProductsByCategory(String category, Pageable pageable) {
+		log.debug("Getting products by category: {} with pagination: {}", category, pageable);
+		return productRepository.findByCategory(category, pageable).map(ProductResponse::fromEntity);
+	}
 
-    /**
-     * Get products by name containing the given string with pagination.
-     *
-     * @param name name substring to search for
-     * @param pageable pagination information
-     * @return page of product responses
-     */
-    @Transactional(readOnly = true)
-    public Page<ProductResponse> getProductsByName(String name, Pageable pageable) {
-        log.debug("Getting products by name containing: {} with pagination: {}", name, pageable);
-        return productRepository.findByNameContainingIgnoreCase(name, pageable)
-                .map(ProductResponse::fromEntity);
-    }
+	/**
+	 * Get products by name containing the given string with pagination.
+	 * @param name name substring to search for
+	 * @param pageable pagination information
+	 * @return page of product responses
+	 */
+	@Transactional(readOnly = true)
+	public Page<ProductResponse> getProductsByName(String name, Pageable pageable) {
+		log.debug("Getting products by name containing: {} with pagination: {}", name, pageable);
+		return productRepository.findByNameContainingIgnoreCase(name, pageable).map(ProductResponse::fromEntity);
+	}
 
-    /**
-     * Get a product by ID.
-     *
-     * @param id product ID
-     * @return product response
-     * @throws EntityNotFoundException if product not found
-     */
-    @Transactional(readOnly = true)
-    public ProductResponse getProductById(Long id) {
-        log.debug("Getting product by ID: {}", id);
-        return productRepository.findById(id)
-                .map(ProductResponse::fromEntity)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + id));
-    }
+	/**
+	 * Get a product by ID.
+	 * @param id product ID
+	 * @return product response
+	 * @throws EntityNotFoundException if product not found
+	 */
+	@Transactional(readOnly = true)
+	public ProductResponse getProductById(Long id) {
+		log.debug("Getting product by ID: {}", id);
+		return productRepository.findById(id)
+			.map(ProductResponse::fromEntity)
+			.orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + id));
+	}
 
-    /**
-     * Create a new product.
-     *
-     * @param request product request
-     * @return created product response
-     */
-    @Transactional
-    public ProductResponse createProduct(ProductRequest request) {
-        log.debug("Creating product: {}", request);
+	/**
+	 * Create a new product.
+	 * @param request product request
+	 * @return created product response
+	 */
+	@Transactional
+	public ProductResponse createProduct(ProductRequest request) {
+		log.debug("Creating product: {}", request);
 
-        // Check if product with same name already exists
-        Optional<Product> existingProduct = productRepository.findByNameIgnoreCase(request.name());
-        if (existingProduct.isPresent()) {
-            log.warn("Product with name '{}' already exists", request.name());
-            throw new IllegalArgumentException("Product with name '" + request.name() + "' already exists");
-        }
+		// Check if product with same name already exists
+		Optional<Product> existingProduct = productRepository.findByNameIgnoreCase(request.name());
+		if (existingProduct.isPresent()) {
+			log.warn("Product with name '{}' already exists", request.name());
+			throw new IllegalArgumentException("Product with name '" + request.name() + "' already exists");
+		}
 
-        Product product = new Product(
-                request.name(),
-                request.description(),
-                request.price(),
-                request.category(),
-                request.imageUrl(),
-                request.available()
-        );
+		Product product = new Product(request.name(), request.description(), request.price(), request.category(),
+				request.imageUrl(), request.available());
 
-        Product savedProduct = productRepository.save(product);
-        log.info("Created product with ID: {}", savedProduct.getId());
-        return ProductResponse.fromEntity(savedProduct);
-    }
+		Product savedProduct = productRepository.save(product);
+		log.info("Created product with ID: {}", savedProduct.getId());
+		return ProductResponse.fromEntity(savedProduct);
+	}
 
-    /**
-     * Update an existing product.
-     *
-     * @param id product ID
-     * @param request product request
-     * @return updated product response
-     * @throws EntityNotFoundException if product not found
-     */
-    @Transactional
-    public ProductResponse updateProduct(Long id, ProductRequest request) {
-        log.debug("Updating product with ID: {}, request: {}", id, request);
+	/**
+	 * Update an existing product.
+	 * @param id product ID
+	 * @param request product request
+	 * @return updated product response
+	 * @throws EntityNotFoundException if product not found
+	 */
+	@Transactional
+	public ProductResponse updateProduct(Long id, ProductRequest request) {
+		log.debug("Updating product with ID: {}, request: {}", id, request);
 
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + id));
+		Product product = productRepository.findById(id)
+			.orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + id));
 
-        // Check if another product with the same name exists
-        Optional<Product> existingProduct = productRepository.findByNameIgnoreCase(request.name());
-        if (existingProduct.isPresent() && !existingProduct.get().getId().equals(id)) {
-            log.warn("Another product with name '{}' already exists", request.name());
-            throw new IllegalArgumentException("Another product with name '" + request.name() + "' already exists");
-        }
+		// Check if another product with the same name exists
+		Optional<Product> existingProduct = productRepository.findByNameIgnoreCase(request.name());
+		if (existingProduct.isPresent() && !existingProduct.get().getId().equals(id)) {
+			log.warn("Another product with name '{}' already exists", request.name());
+			throw new IllegalArgumentException("Another product with name '" + request.name() + "' already exists");
+		}
 
-        product.setName(request.name());
-        product.setDescription(request.description());
-        product.setPrice(request.price());
-        product.setCategory(request.category());
-        product.setImageUrl(request.imageUrl());
-        product.setAvailable(request.available());
+		product.setName(request.name());
+		product.setDescription(request.description());
+		product.setPrice(request.price());
+		product.setCategory(request.category());
+		product.setImageUrl(request.imageUrl());
+		product.setAvailable(request.available());
 
-        Product updatedProduct = productRepository.save(product);
-        log.info("Updated product with ID: {}", updatedProduct.getId());
-        return ProductResponse.fromEntity(updatedProduct);
-    }
+		Product updatedProduct = productRepository.save(product);
+		log.info("Updated product with ID: {}", updatedProduct.getId());
+		return ProductResponse.fromEntity(updatedProduct);
+	}
 
-    /**
-     * Delete a product by ID.
-     *
-     * @param id product ID
-     * @throws EntityNotFoundException if product not found
-     */
-    @Transactional
-    public void deleteProduct(Long id) {
-        log.debug("Deleting product with ID: {}", id);
+	/**
+	 * Delete a product by ID.
+	 * @param id product ID
+	 * @throws EntityNotFoundException if product not found
+	 */
+	@Transactional
+	public void deleteProduct(Long id) {
+		log.debug("Deleting product with ID: {}", id);
 
-        if (!productRepository.existsById(id)) {
-            log.warn("Product not found with ID: {}", id);
-            throw new EntityNotFoundException("Product not found with ID: " + id);
-        }
+		if (!productRepository.existsById(id)) {
+			log.warn("Product not found with ID: {}", id);
+			throw new EntityNotFoundException("Product not found with ID: " + id);
+		}
 
-        productRepository.deleteById(id);
-        log.info("Deleted product with ID: {}", id);
-    }
+		productRepository.deleteById(id);
+		log.info("Deleted product with ID: {}", id);
+	}
+
 }

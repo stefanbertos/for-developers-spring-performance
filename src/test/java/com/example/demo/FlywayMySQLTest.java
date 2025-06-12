@@ -10,40 +10,36 @@ import org.springframework.test.context.TestPropertySource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-@TestPropertySource(properties = {
-    "spring.flyway.enabled=true",
-    "spring.jpa.hibernate.ddl-auto=none",
-    "spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver",
-    "logging.level.org.flywaydb=DEBUG",
-    "logging.level.org.springframework.jdbc=DEBUG",
-    "spring.flyway.baseline-on-migrate=true",
-    "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect"
-})
+@TestPropertySource(properties = { "spring.flyway.enabled=true", "spring.jpa.hibernate.ddl-auto=none",
+		"spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver", "logging.level.org.flywaydb=DEBUG",
+		"logging.level.org.springframework.jdbc=DEBUG", "spring.flyway.baseline-on-migrate=true",
+		"spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect" })
 class FlywayMySQLTest extends MySQLTestContainer {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
-    @Test
-    void flywayMigrationsExecutedSuccessfully() {
-        System.out.println("[DEBUG_LOG] Starting FlywayMySQLTest");
-        System.out.println("[DEBUG_LOG] MySQL container running: " + mysqlContainer.isRunning());
-        System.out.println("[DEBUG_LOG] MySQL container JDBC URL: " + mysqlContainer.getJdbcUrl());
+	@Test
+	void flywayMigrationsExecutedSuccessfully() {
+		System.out.println("[DEBUG_LOG] Starting FlywayMySQLTest");
+		System.out.println("[DEBUG_LOG] MySQL container running: " + mysqlContainer.isRunning());
+		System.out.println("[DEBUG_LOG] MySQL container JDBC URL: " + mysqlContainer.getJdbcUrl());
 
-        try {
-            // Query the products table which should be created by Flyway migrations
-            System.out.println("[DEBUG_LOG] Executing SQL query");
-            Integer count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM products", Integer.class);
+		try {
+			// Query the products table which should be created by Flyway migrations
+			System.out.println("[DEBUG_LOG] Executing SQL query");
+			Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM products", Integer.class);
 
-            // The V2__insert_sample_data.sql should insert some sample products
-            assertEquals(true, count > 0, "Products table should contain data from Flyway migrations");
+			// The V2__insert_sample_data.sql should insert some sample products
+			assertEquals(true, count > 0, "Products table should contain data from Flyway migrations");
 
-            System.out.println("[DEBUG_LOG] Found " + count + " products in the database");
-        } catch (Exception e) {
-            System.out.println("[DEBUG_LOG] Exception occurred: " + e.getMessage());
-            e.printStackTrace();
-            throw e;
-        }
-    }
+			System.out.println("[DEBUG_LOG] Found " + count + " products in the database");
+		}
+		catch (Exception e) {
+			System.out.println("[DEBUG_LOG] Exception occurred: " + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
 }

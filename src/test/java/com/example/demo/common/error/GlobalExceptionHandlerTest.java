@@ -22,111 +22,112 @@ import static org.mockito.Mockito.when;
 
 class GlobalExceptionHandlerTest {
 
-    private final GlobalExceptionHandler exceptionHandler = new GlobalExceptionHandler();
+	private final GlobalExceptionHandler exceptionHandler = new GlobalExceptionHandler();
 
-    @Test
-    void handleValidationExceptions_ShouldReturnProblemDetail() {
-        // Arrange
-        MethodArgumentNotValidException exception = mock(MethodArgumentNotValidException.class);
-        BindingResult bindingResult = mock(BindingResult.class);
-        FieldError fieldError = new FieldError("object", "field", "error message");
+	@Test
+	void handleValidationExceptions_ShouldReturnProblemDetail() {
+		// Arrange
+		MethodArgumentNotValidException exception = mock(MethodArgumentNotValidException.class);
+		BindingResult bindingResult = mock(BindingResult.class);
+		FieldError fieldError = new FieldError("object", "field", "error message");
 
-        when(exception.getBindingResult()).thenReturn(bindingResult);
-        when(bindingResult.getAllErrors()).thenReturn(List.of(fieldError));
+		when(exception.getBindingResult()).thenReturn(bindingResult);
+		when(bindingResult.getAllErrors()).thenReturn(List.of(fieldError));
 
-        // Act
-        ProblemDetail problemDetail = exceptionHandler.handleValidationExceptions(exception);
+		// Act
+		ProblemDetail problemDetail = exceptionHandler.handleValidationExceptions(exception);
 
-        // Assert
-        assertThat(problemDetail).isNotNull();
-        assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(problemDetail.getTitle()).isEqualTo("Validation Error");
-        assertThat(problemDetail.getDetail()).isEqualTo("Validation failed");
-        assertThat(problemDetail.getProperties()).containsKey("errors");
-        assertThat(problemDetail.getProperties()).containsKey("timestamp");
-    }
+		// Assert
+		assertThat(problemDetail).isNotNull();
+		assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+		assertThat(problemDetail.getTitle()).isEqualTo("Validation Error");
+		assertThat(problemDetail.getDetail()).isEqualTo("Validation failed");
+		assertThat(problemDetail.getProperties()).containsKey("errors");
+		assertThat(problemDetail.getProperties()).containsKey("timestamp");
+	}
 
-    @Test
-    void handleConstraintViolationException_ShouldReturnProblemDetail() {
-        // Arrange
-        Set<ConstraintViolation<?>> violations = new HashSet<>();
-        ConstraintViolationException exception = new ConstraintViolationException("Constraint violation", violations);
+	@Test
+	void handleConstraintViolationException_ShouldReturnProblemDetail() {
+		// Arrange
+		Set<ConstraintViolation<?>> violations = new HashSet<>();
+		ConstraintViolationException exception = new ConstraintViolationException("Constraint violation", violations);
 
-        // Act
-        ProblemDetail problemDetail = exceptionHandler.handleConstraintViolationException(exception);
+		// Act
+		ProblemDetail problemDetail = exceptionHandler.handleConstraintViolationException(exception);
 
-        // Assert
-        assertThat(problemDetail).isNotNull();
-        assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(problemDetail.getTitle()).isEqualTo("Constraint Violation");
-        assertThat(problemDetail.getDetail()).isEqualTo("Constraint violation");
-        assertThat(problemDetail.getProperties()).containsKey("timestamp");
-    }
+		// Assert
+		assertThat(problemDetail).isNotNull();
+		assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+		assertThat(problemDetail.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(problemDetail.getDetail()).isEqualTo("Constraint violation");
+		assertThat(problemDetail.getProperties()).containsKey("timestamp");
+	}
 
-    @Test
-    void handleEntityNotFoundException_ShouldReturnProblemDetail() {
-        // Arrange
-        EntityNotFoundException exception = new EntityNotFoundException("Entity not found");
+	@Test
+	void handleEntityNotFoundException_ShouldReturnProblemDetail() {
+		// Arrange
+		EntityNotFoundException exception = new EntityNotFoundException("Entity not found");
 
-        // Act
-        ProblemDetail problemDetail = exceptionHandler.handleEntityNotFoundException(exception);
+		// Act
+		ProblemDetail problemDetail = exceptionHandler.handleEntityNotFoundException(exception);
 
-        // Assert
-        assertThat(problemDetail).isNotNull();
-        assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
-        assertThat(problemDetail.getTitle()).isEqualTo("Resource Not Found");
-        assertThat(problemDetail.getDetail()).isEqualTo("Entity not found");
-        assertThat(problemDetail.getProperties()).containsKey("timestamp");
-    }
+		// Assert
+		assertThat(problemDetail).isNotNull();
+		assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+		assertThat(problemDetail.getTitle()).isEqualTo("Resource Not Found");
+		assertThat(problemDetail.getDetail()).isEqualTo("Entity not found");
+		assertThat(problemDetail.getProperties()).containsKey("timestamp");
+	}
 
-    @Test
-    void handleIllegalArgumentException_ShouldReturnProblemDetail() {
-        // Arrange
-        IllegalArgumentException exception = new IllegalArgumentException("Illegal argument");
+	@Test
+	void handleIllegalArgumentException_ShouldReturnProblemDetail() {
+		// Arrange
+		IllegalArgumentException exception = new IllegalArgumentException("Illegal argument");
 
-        // Act
-        ProblemDetail problemDetail = exceptionHandler.handleIllegalArgumentException(exception);
+		// Act
+		ProblemDetail problemDetail = exceptionHandler.handleIllegalArgumentException(exception);
 
-        // Assert
-        assertThat(problemDetail).isNotNull();
-        assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(problemDetail.getTitle()).isEqualTo("Invalid Request");
-        assertThat(problemDetail.getDetail()).isEqualTo("Illegal argument");
-        assertThat(problemDetail.getProperties()).containsKey("timestamp");
-    }
+		// Assert
+		assertThat(problemDetail).isNotNull();
+		assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+		assertThat(problemDetail.getTitle()).isEqualTo("Invalid Request");
+		assertThat(problemDetail.getDetail()).isEqualTo("Illegal argument");
+		assertThat(problemDetail.getProperties()).containsKey("timestamp");
+	}
 
-    @Test
-    void handleTypeMismatch_ShouldReturnProblemDetail() {
-        // Arrange
-        MethodArgumentTypeMismatchException exception = mock(MethodArgumentTypeMismatchException.class);
-        when(exception.getName()).thenReturn("paramName");
-        // Use doReturn instead of when().thenReturn() to avoid generic type issues
-        doReturn(String.class).when(exception).getRequiredType();
+	@Test
+	void handleTypeMismatch_ShouldReturnProblemDetail() {
+		// Arrange
+		MethodArgumentTypeMismatchException exception = mock(MethodArgumentTypeMismatchException.class);
+		when(exception.getName()).thenReturn("paramName");
+		// Use doReturn instead of when().thenReturn() to avoid generic type issues
+		doReturn(String.class).when(exception).getRequiredType();
 
-        // Act
-        ProblemDetail problemDetail = exceptionHandler.handleTypeMismatch(exception);
+		// Act
+		ProblemDetail problemDetail = exceptionHandler.handleTypeMismatch(exception);
 
-        // Assert
-        assertThat(problemDetail).isNotNull();
-        assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(problemDetail.getTitle()).isEqualTo("Type Mismatch");
-        assertThat(problemDetail.getDetail()).isEqualTo("Parameter 'paramName' should be of type 'String'");
-        assertThat(problemDetail.getProperties()).containsKey("timestamp");
-    }
+		// Assert
+		assertThat(problemDetail).isNotNull();
+		assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+		assertThat(problemDetail.getTitle()).isEqualTo("Type Mismatch");
+		assertThat(problemDetail.getDetail()).isEqualTo("Parameter 'paramName' should be of type 'String'");
+		assertThat(problemDetail.getProperties()).containsKey("timestamp");
+	}
 
-    @Test
-    void handleGenericException_ShouldReturnProblemDetail() {
-        // Arrange
-        Exception exception = new Exception("Generic exception");
+	@Test
+	void handleGenericException_ShouldReturnProblemDetail() {
+		// Arrange
+		Exception exception = new Exception("Generic exception");
 
-        // Act
-        ProblemDetail problemDetail = exceptionHandler.handleGenericException(exception);
+		// Act
+		ProblemDetail problemDetail = exceptionHandler.handleGenericException(exception);
 
-        // Assert
-        assertThat(problemDetail).isNotNull();
-        assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        assertThat(problemDetail.getTitle()).isEqualTo("Internal Server Error");
-        assertThat(problemDetail.getDetail()).isEqualTo("An unexpected error occurred");
-        assertThat(problemDetail.getProperties()).containsKey("timestamp");
-    }
+		// Assert
+		assertThat(problemDetail).isNotNull();
+		assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+		assertThat(problemDetail.getTitle()).isEqualTo("Internal Server Error");
+		assertThat(problemDetail.getDetail()).isEqualTo("An unexpected error occurred");
+		assertThat(problemDetail.getProperties()).containsKey("timestamp");
+	}
+
 }
