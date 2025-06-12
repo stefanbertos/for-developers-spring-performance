@@ -9,8 +9,10 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.net.URI;
 import java.time.Instant;
@@ -117,6 +119,19 @@ class GlobalExceptionHandler {
         return problemDetail;
     }
 
+    @ExceptionHandler(NoResourceFoundException.class)
+    ProblemDetail handleNoResourceFoundException(NoResourceFoundException ex) {
+        log.warn("resource not found: {}", ex.getMessage());
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                HttpStatus.NOT_FOUND, ex.getMessage());
+        problemDetail.setTitle("Resource Not Found");
+        problemDetail.setType(URI.create(PROBLEM_BASE_URL + "/not-found"));
+        problemDetail.setProperty("timestamp", Instant.now());
+
+        return problemDetail;
+    }
+
     /**
      * Handles all other exceptions.
      */
@@ -132,4 +147,7 @@ class GlobalExceptionHandler {
         
         return problemDetail;
     }
+
+
+
 }
