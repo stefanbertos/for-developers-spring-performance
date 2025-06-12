@@ -40,7 +40,7 @@ class ProductController {
     })
     ResponseEntity<PageResponse<ProductResponse>> getAllProducts(
             @Parameter(description = "Page number (0-based)") @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = "Page size") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Page size") @RequestParam(defaultValue = "100") int size,
             @Parameter(description = "Sort field") @RequestParam(defaultValue = "id") String sort,
             @Parameter(description = "Sort direction") @RequestParam(defaultValue = "asc") String direction) {
         
@@ -59,7 +59,7 @@ class ProductController {
     ResponseEntity<PageResponse<ProductResponse>> getProductsByCategory(
             @Parameter(description = "Category name") @PathVariable String category,
             @Parameter(description = "Page number (0-based)") @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = "Page size") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Page size") @RequestParam(defaultValue = "100") int size,
             @Parameter(description = "Sort field") @RequestParam(defaultValue = "id") String sort,
             @Parameter(description = "Sort direction") @RequestParam(defaultValue = "asc") String direction) {
         
@@ -78,7 +78,7 @@ class ProductController {
     ResponseEntity<PageResponse<ProductResponse>> searchProductsByName(
             @Parameter(description = "Search term") @RequestParam String name,
             @Parameter(description = "Page number (0-based)") @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = "Page size") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Page size") @RequestParam(defaultValue = "100") int size,
             @Parameter(description = "Sort field") @RequestParam(defaultValue = "id") String sort,
             @Parameter(description = "Sort direction") @RequestParam(defaultValue = "asc") String direction) {
         

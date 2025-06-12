@@ -2,10 +2,10 @@ spring:
   application:
     name: product-catalog-api
   datasource:
-    url: jdbc:postgresql://localhost:5432/productdb
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:mysql://localhost:3306/productdb
+    username: mysql
+    password: mysql
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: validate
@@ -30,9 +30,6 @@ management:
     prometheus:
       enabled: true
   metrics:
-    export:
-      prometheus:
-        enabled: true
     tags:
       application: ${spring.application.name}
 
