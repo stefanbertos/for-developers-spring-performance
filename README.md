@@ -90,3 +90,4 @@ fix Sonar violations
 test metrics, dashboards
 add call to 3rd party api fia RestClient
 add performance tests
+add readme for sonarqube
