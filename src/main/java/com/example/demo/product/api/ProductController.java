@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 class ProductController {
 
 	private static final Logger log = LoggerFactory.getLogger(ProductController.class);
+	private static final String PRODUCT_NOT_FOUND_WITH_ID = "Product not found with ID: {}";
 
 	private final ProductService productService;
 
@@ -98,8 +99,8 @@ class ProductController {
 			ProductResponse product = productService.getProductById(id);
 			return ResponseEntity.ok(product);
 		}
-		catch (EntityNotFoundException e) {
-			log.warn("Product not found with ID: {}", id);
+		catch (EntityNotFoundException entityNotFoundException) {
+			log.warn(PRODUCT_NOT_FOUND_WITH_ID, id);
 			return ResponseEntity.notFound().build();
 		}
 	}
@@ -141,12 +142,12 @@ class ProductController {
 			ProductResponse updatedProduct = productService.updateProduct(id, request);
 			return ResponseEntity.ok(updatedProduct);
 		}
-		catch (EntityNotFoundException e) {
-			log.warn("Product not found with ID: {}", id);
+		catch (EntityNotFoundException entityNotFoundException) {
+			log.warn(PRODUCT_NOT_FOUND_WITH_ID, id);
 			return ResponseEntity.notFound().build();
 		}
-		catch (IllegalArgumentException e) {
-			log.warn("Failed to update product: {}", e.getMessage());
+		catch (IllegalArgumentException illegalArgumentException) {
+			log.warn("Failed to update product: {}", illegalArgumentException.getMessage());
 			return ResponseEntity.badRequest().build();
 		}
 	}
@@ -162,8 +163,8 @@ class ProductController {
 			productService.deleteProduct(id);
 			return ResponseEntity.noContent().build();
 		}
-		catch (EntityNotFoundException e) {
-			log.warn("Product not found with ID: {}", id);
+		catch (EntityNotFoundException entityNotFoundException) {
+			log.warn(PRODUCT_NOT_FOUND_WITH_ID, id);
 			return ResponseEntity.notFound().build();
 		}
 	}
