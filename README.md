@@ -16,7 +16,7 @@ A high-performance Spring Boot application showcasing a product catalog service 
 
 - Java 24 (with Virtual Threads)
 - Spring Boot 3.5.0
-- PostgreSQL 16.0
+- Mysql 8.0
 - Flyway for database migrations
 - JaCoCo for code coverage
 - Docker and Docker Compose
@@ -35,7 +35,7 @@ A high-performance Spring Boot application showcasing a product catalog service 
 The easiest way to run the application is using Docker Compose:
 
 ```bash
-# Build and start the application with PostgreSQL
+# Build and start the application with MySQL
 docker-compose up -d
 
 # Check the logs
@@ -48,9 +48,9 @@ The API will be available at http://localhost:8080
 
 To run the application locally:
 
-1. Start a PostgreSQL instance:
+1. Start a Mysql instance:
    ```bash
-   docker-compose up -d postgres
+   docker-compose up -d mysql
    ```
 
 2. Run the application:
@@ -84,3 +84,9 @@ The report will be available at `build/reports/jacoco/test/html/index.html`
 ## Alternative Implementations
 
 A reactive implementation using Spring WebFlux will be available in a separate branch or repository.
+
+@TODO
+fix Sonar violations
+test metrics, dashboards
+add call to 3rd party api fia RestClient
+add performance tests
