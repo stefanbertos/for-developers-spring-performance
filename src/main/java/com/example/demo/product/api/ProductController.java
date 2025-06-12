@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 class ProductController {
 
 	private static final Logger log = LoggerFactory.getLogger(ProductController.class);
+
 	private static final String PRODUCT_NOT_FOUND_WITH_ID = "Product not found with ID: {}";
 
 	private final ProductService productService;
