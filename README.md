@@ -5,7 +5,7 @@ A high-performance Spring Boot application showcasing a product catalog service 
 ## Features
 
 - RESTful API for product catalog management (CRUD operations)
-- PostgreSQL database for data persistence
+- MySQL database for data persistence
 - Flyway for database schema migrations
 - 100% code coverage with JaCoCo
 - Docker support for easy deployment
@@ -127,6 +127,48 @@ The project is configured to enforce 100% code coverage. To generate a coverage 
 
 The report will be available at `build/reports/jacoco/test/html/index.html`
 
+## Monitoring
+
+The application is configured with Prometheus, Grafana, and Tempo for monitoring and distributed tracing:
+
+1. Start the monitoring stack:
+   ```bash
+   docker-compose up -d prometheus grafana tempo
+   ```
+
+2. Access Grafana at http://localhost:3000 (default credentials: admin/admin)
+
+3. The application exposes metrics at `/actuator/prometheus` which are automatically scraped by Prometheus
+
+### Metrics and Dashboards
+
+Grafana comes pre-configured with a Spring Boot dashboard that shows key metrics like:
+- JVM memory usage
+- HTTP request rates and latencies
+- System CPU and memory usage
+
+### Distributed Tracing
+
+The application is configured with distributed tracing using OpenTelemetry and Tempo:
+
+1. Every request to the application generates trace data that is sent to Tempo
+2. Traces show the full request flow, including:
+   - HTTP request processing time
+   - Database query execution time
+   - External API call duration
+   - Internal method execution time
+
+3. To view traces:
+   - Go to Grafana at http://localhost:3000
+   - Navigate to the "Application Tracing" dashboard
+   - Click on any trace to see the detailed span information
+   - Analyze performance bottlenecks by examining the duration of each span
+
+4. Trace data helps identify:
+   - Slow database queries
+   - Inefficient API calls
+   - Performance bottlenecks in the application code
+
 ## Code Quality
 
 ### SonarQube
@@ -162,5 +204,6 @@ The project is configured to use SonarQube for code quality analysis. To run Son
 
 A reactive implementation using Spring WebFlux will be available in a separate branch or repository.
 
-@TODO
-Add more dashboards for monitoring application performance
+## TODO
+- Add more specialized dashboards for specific application features
+- Implement custom metrics for business KPIs

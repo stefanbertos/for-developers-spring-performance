@@ -22,12 +22,27 @@ spring:
     virtual:
       enabled: true
 
+  # Distributed tracing configuration
+  tracing:
+    sampling:
+      probability: 1.0
+    baggage:
+      remote-fields:
+        - transaction-id
+      correlation:
+        fields:
+          - transaction-id
+    otel:
+      exporter:
+        otlp:
+          endpoint: http://tempo:4317
+
 # Actuator configuration
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,prometheus
+        include: health,info,metrics,prometheus,tracing
   endpoint:
     health:
       show-details: always
@@ -36,6 +51,15 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+    propagation:
+      type: w3c
+    baggage:
+      correlation:
+        enabled: true
 
 springdoc:
   api-docs:

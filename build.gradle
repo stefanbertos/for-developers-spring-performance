@@ -33,6 +33,11 @@ dependencies {
 	implementation 'org.flywaydb:flyway-mysql'
 	implementation 'io.micrometer:micrometer-registry-prometheus'
 
+	// Distributed tracing
+	implementation 'io.micrometer:micrometer-tracing-bridge-otel'
+	implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
+	implementation 'io.opentelemetry:opentelemetry-sdk-extension-autoconfigure'
+
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
 	// Keep H2 for local development and testing if needed

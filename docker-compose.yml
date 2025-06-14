@@ -48,6 +48,20 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
+      - tempo
+    restart: unless-stopped
+
+  tempo:
+    image: grafana/tempo:latest
+    container_name: tempo
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./config/tempo/tempo.yaml:/etc/tempo.yaml
+      - tempo-data:/tmp/tempo
+    ports:
+      - "3200:3200"  # tempo-query
+      - "4317:4317"  # OTLP gRPC
+      - "4318:4318"  # OTLP HTTP
     restart: unless-stopped
 
   sonarqube:
@@ -99,10 +113,15 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+      tempo:
+        condition: service_started
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/productdb
       SPRING_DATASOURCE_USERNAME: mysql
       SPRING_DATASOURCE_PASSWORD: mysql
+      SPRING_TRACING_OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
+      MANAGEMENT_TRACING_ENABLED: "true"
+      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: 1.0
     ports:
       - "8080:8080"
     healthcheck:
@@ -116,6 +135,7 @@ volumes:
   mysql-data:
   prometheus-data:
   grafana-data:
+  tempo-data:
   sonarqube_data:
   sonarqube_temp:
   sonarqube_extensions:
