@@ -71,6 +71,52 @@ Run the tests with:
 ./gradlew test
 ```
 
+### Performance Testing
+
+The project includes a performance test that:
+1. Creates 1000 products in the database
+2. Makes 10 GET requests with size 100 to retrieve all products
+3. Measures the execution time
+4. Asserts that the time is under the configured threshold
+
+#### Running Performance Tests Against Local Environment
+
+By default, the performance test runs against the local environment:
+
+```bash
+./gradlew test --tests "com.example.demo.product.performance.ProductPerformanceTest"
+```
+
+This will:
+- Start a MySQL container using Testcontainers
+- Create 1000 products
+- Run the performance test
+- Assert that each batch of requests completes within the configured threshold (default: 5000ms)
+
+#### Running Performance Tests Against Production Environment
+
+To run the performance test against a production environment:
+
+1. Edit `src/test/resources/application-performance-test.yaml`:
+   ```yaml
+   performance:
+     test:
+       mode: production
+       production-endpoint: https://your-production-url.com
+       max-execution-time-ms: 5000
+   ```
+
+2. Run the test:
+   ```bash
+   ./gradlew test --tests "com.example.demo.product.performance.ProductPerformanceTest"
+   ```
+
+When running against a production environment, the test will:
+- Skip the product creation step
+- Connect to the specified production endpoint
+- Run the performance test
+- Assert that each batch of requests completes within the configured threshold
+
 ### Code Coverage
 
 The project is configured to enforce 100% code coverage. To generate a coverage report:
@@ -117,5 +163,4 @@ The project is configured to use SonarQube for code quality analysis. To run Son
 A reactive implementation using Spring WebFlux will be available in a separate branch or repository.
 
 @TODO
-test metrics, dashboards
-add performance tests
+Add more dashboards for monitoring application performance
