@@ -20,6 +20,12 @@ repositories {
 	mavenCentral()
 }
 
+dependencyManagement {
+	imports {
+		mavenBom("io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom:2.16.0")
+	}
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -29,19 +35,18 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 	implementation 'org.springframework.retry:spring-retry'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8'
+
+	// database
 	implementation 'org.flywaydb:flyway-core'
 	implementation 'org.flywaydb:flyway-mysql'
-	implementation 'io.micrometer:micrometer-registry-prometheus'
-
-	// Distributed tracing
-	implementation 'io.micrometer:micrometer-tracing-bridge-otel'
-	implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
-	implementation 'io.opentelemetry:opentelemetry-sdk-extension-autoconfigure'
-
 	runtimeOnly 'com.mysql:mysql-connector-j'
-
 	// Keep H2 for local development and testing if needed
 	runtimeOnly 'com.h2database:h2'
+
+	// Distributed tracing
+	implementation 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter'
+	implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.testcontainers:mysql'
@@ -49,6 +54,8 @@ dependencies {
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+
+// Removed 'spring-boot-starter-tracing' as it is not required and causes build issues
 
 tasks.named('test') {
 	useJUnitPlatform()

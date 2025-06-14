@@ -127,47 +127,49 @@ The project is configured to enforce 100% code coverage. To generate a coverage 
 
 The report will be available at `build/reports/jacoco/test/html/index.html`
 
-## Monitoring
 
-The application is configured with Prometheus, Grafana, and Tempo for monitoring and distributed tracing:
+## Distributed Tracing with Jaeger
 
-1. Start the monitoring stack:
-   ```bash
-   docker-compose up -d prometheus grafana tempo
+This project is configured to export OpenTelemetry traces to Jaeger for distributed tracing and visualization.
+
+### How to use Jaeger
+
+1. **Start Jaeger with Docker Compose**
+
+   Jaeger is included in `docker-compose.yml`. To start Jaeger and all services:
+
+   ```sh
+   docker-compose up
    ```
 
-2. Access Grafana at http://localhost:3000 (default credentials: admin/admin)
+   Jaeger UI will be available at [http://localhost:16686](http://localhost:16686)
 
-3. The application exposes metrics at `/actuator/prometheus` which are automatically scraped by Prometheus
+2. **Application Configuration**
 
-### Metrics and Dashboards
+   The application is set to export traces to Jaeger using the OTLP protocol (gRPC):
 
-Grafana comes pre-configured with a Spring Boot dashboard that shows key metrics like:
-- JVM memory usage
-- HTTP request rates and latencies
-- System CPU and memory usage
+   ```yaml
+   management:
+     otlp:
+       endpoint: http://jaeger:4317
+   ```
+   (when running in Docker Compose)
 
-### Distributed Tracing
+   For local development, the endpoint is:
+   ```yaml
+   management:
+     otlp:
+       endpoint: http://localhost:4317
+   ```
 
-The application is configured with distributed tracing using OpenTelemetry and Tempo:
+3. **View Traces**
 
-1. Every request to the application generates trace data that is sent to Tempo
-2. Traces show the full request flow, including:
-   - HTTP request processing time
-   - Database query execution time
-   - External API call duration
-   - Internal method execution time
+   - Trigger requests to your application (e.g., call REST endpoints).
+   - Open [http://localhost:16686](http://localhost:16686) and search for traces by service name (e.g., `product-catalog-api`).
 
-3. To view traces:
-   - Go to Grafana at http://localhost:3000
-   - Navigate to the "Application Tracing" dashboard
-   - Click on any trace to see the detailed span information
-   - Analyze performance bottlenecks by examining the duration of each span
-
-4. Trace data helps identify:
-   - Slow database queries
-   - Inefficient API calls
-   - Performance bottlenecks in the application code
+4. **Notes**
+   - Only traces are exported to Jaeger. Metrics and logs are not exported to Jaeger (see `application.yaml`).
+   - For metrics, use Prometheus. For logs, use your preferred log aggregation solution.
 
 ## Code Quality
 
