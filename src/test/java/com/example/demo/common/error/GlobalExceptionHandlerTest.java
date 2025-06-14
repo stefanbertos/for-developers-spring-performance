@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.validation.BindingResult;
@@ -127,6 +128,23 @@ class GlobalExceptionHandlerTest {
 		assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 		assertThat(problemDetail.getTitle()).isEqualTo("Internal Server Error");
 		assertThat(problemDetail.getDetail()).isEqualTo("An unexpected error occurred");
+		assertThat(problemDetail.getProperties()).containsKey("timestamp");
+	}
+
+	@Test
+	void handleNoResourceFoundException_ShouldReturnProblemDetail() {
+		// Arrange
+		org.springframework.web.servlet.resource.NoResourceFoundException exception = 
+			new org.springframework.web.servlet.resource.NoResourceFoundException(HttpMethod.GET, "Resource not found");
+
+		// Act
+		ProblemDetail problemDetail = exceptionHandler.handleNoResourceFoundException(exception);
+
+		// Assert
+		assertThat(problemDetail).isNotNull();
+		assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+		assertThat(problemDetail.getTitle()).isEqualTo("Resource Not Found");
+		assertThat(problemDetail.getDetail()).isEqualTo("Resource not found");
 		assertThat(problemDetail.getProperties()).containsKey("timestamp");
 	}
 

@@ -81,13 +81,42 @@ The project is configured to enforce 100% code coverage. To generate a coverage 
 
 The report will be available at `build/reports/jacoco/test/html/index.html`
 
+## Code Quality
+
+### SonarQube
+
+The project is configured to use SonarQube for code quality analysis. To run SonarQube:
+
+1. Start SonarQube and its database:
+   ```bash
+   docker-compose up -d sonarqube db
+   ```
+
+2. Access SonarQube at http://localhost:9000 (default credentials: admin/admin)
+
+3. Run the analysis:
+   ```bash
+   ./gradlew sonarqube
+   ```
+
+   Note: The project is already configured with SonarQube properties in build.gradle:
+   ```groovy
+   sonarqube {
+       properties {
+           property "sonar.projectKey", "product-catalog"
+           property "sonar.host.url", "http://localhost:9000"
+           property "sonar.token", "sqa_56c9202206133c743190e1ab734cd9af9b719e4d"
+       }
+   }
+   ```
+
+4. View the results in the SonarQube dashboard
+
 ## Alternative Implementations
 
 A reactive implementation using Spring WebFlux will be available in a separate branch or repository.
 
 @TODO
-fix Sonar violations
 test metrics, dashboards
 add call to 3rd party api fia RestClient
 add performance tests
-add readme for sonarqube

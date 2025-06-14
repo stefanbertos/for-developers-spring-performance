@@ -28,6 +28,7 @@ class GlobalExceptionHandler {
 	private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
 	private static final String PROBLEM_BASE_URL = "https://api.product-catalog.com/problems";
+	private static final String TIMESTAMP = "timestamp";
 
 	/**
 	 * Handles validation exceptions from @Valid annotations.
@@ -46,7 +47,7 @@ class GlobalExceptionHandler {
 		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation failed");
 		problemDetail.setTitle("Validation Error");
 		problemDetail.setType(URI.create(PROBLEM_BASE_URL + "/validation-error"));
-		problemDetail.setProperty("timestamp", Instant.now());
+		problemDetail.setProperty(TIMESTAMP, Instant.now());
 		problemDetail.setProperty("errors", errors);
 
 		return problemDetail;
@@ -62,7 +63,7 @@ class GlobalExceptionHandler {
 		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
 		problemDetail.setTitle("Constraint Violation");
 		problemDetail.setType(URI.create(PROBLEM_BASE_URL + "/constraint-violation"));
-		problemDetail.setProperty("timestamp", Instant.now());
+		problemDetail.setProperty(TIMESTAMP, Instant.now());
 
 		return problemDetail;
 	}
@@ -77,7 +78,7 @@ class GlobalExceptionHandler {
 		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
 		problemDetail.setTitle("Resource Not Found");
 		problemDetail.setType(URI.create(PROBLEM_BASE_URL + "/not-found"));
-		problemDetail.setProperty("timestamp", Instant.now());
+		problemDetail.setProperty(TIMESTAMP, Instant.now());
 
 		return problemDetail;
 	}
@@ -92,7 +93,7 @@ class GlobalExceptionHandler {
 		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
 		problemDetail.setTitle("Invalid Request");
 		problemDetail.setType(URI.create(PROBLEM_BASE_URL + "/invalid-request"));
-		problemDetail.setProperty("timestamp", Instant.now());
+		problemDetail.setProperty(TIMESTAMP, Instant.now());
 
 		return problemDetail;
 	}
@@ -103,13 +104,13 @@ class GlobalExceptionHandler {
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	ProblemDetail handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
 		String message = String.format("Parameter '%s' should be of type '%s'", ex.getName(),
-				ex.getRequiredType().getSimpleName());
+				ex.getRequiredType());
 		log.warn("Type mismatch: {}", message);
 
 		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, message);
 		problemDetail.setTitle("Type Mismatch");
 		problemDetail.setType(URI.create(PROBLEM_BASE_URL + "/type-mismatch"));
-		problemDetail.setProperty("timestamp", Instant.now());
+		problemDetail.setProperty(TIMESTAMP, Instant.now());
 
 		return problemDetail;
 	}
@@ -121,7 +122,7 @@ class GlobalExceptionHandler {
 		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
 		problemDetail.setTitle("Resource Not Found");
 		problemDetail.setType(URI.create(PROBLEM_BASE_URL + "/not-found"));
-		problemDetail.setProperty("timestamp", Instant.now());
+		problemDetail.setProperty(TIMESTAMP, Instant.now());
 
 		return problemDetail;
 	}
@@ -137,7 +138,7 @@ class GlobalExceptionHandler {
 				"An unexpected error occurred");
 		problemDetail.setTitle("Internal Server Error");
 		problemDetail.setType(URI.create(PROBLEM_BASE_URL + "/internal-error"));
-		problemDetail.setProperty("timestamp", Instant.now());
+		problemDetail.setProperty(TIMESTAMP, Instant.now());
 
 		return problemDetail;
 	}

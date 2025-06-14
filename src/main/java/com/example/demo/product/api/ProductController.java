@@ -45,7 +45,9 @@ class ProductController {
 			@Parameter(description = "Sort field") @RequestParam(defaultValue = "id") String sort,
 			@Parameter(description = "Sort direction") @RequestParam(defaultValue = "asc") String direction) {
 
-		log.debug("REST request to get all products, page: {}, size: {}", page, size);
+		if (log.isDebugEnabled()) {
+			log.debug("REST request to get all products, page: {}, size: {}", page, size);
+		}
 		Pageable pageable = createPageable(page, size, sort, direction);
 		Page<ProductResponse> productPage = productService.getAllProducts(pageable);
 		return ResponseEntity.ok(PageResponse.from(productPage));
@@ -63,7 +65,9 @@ class ProductController {
 			@Parameter(description = "Sort field") @RequestParam(defaultValue = "id") String sort,
 			@Parameter(description = "Sort direction") @RequestParam(defaultValue = "asc") String direction) {
 
-		log.debug("REST request to get products by category: {}, page: {}, size: {}", category, page, size);
+		if (log.isDebugEnabled()) {
+			log.debug("REST request to get products by category: {}, page: {}, size: {}", category, page, size);
+		}
 		Pageable pageable = createPageable(page, size, sort, direction);
 		Page<ProductResponse> productPage = productService.getProductsByCategory(category, pageable);
 		return ResponseEntity.ok(PageResponse.from(productPage));
@@ -81,7 +85,9 @@ class ProductController {
 			@Parameter(description = "Sort field") @RequestParam(defaultValue = "id") String sort,
 			@Parameter(description = "Sort direction") @RequestParam(defaultValue = "asc") String direction) {
 
-		log.debug("REST request to search products by name: {}, page: {}, size: {}", name, page, size);
+		if (log.isDebugEnabled()) {
+			log.debug("REST request to search products by name: {}, page: {}, size: {}", name, page, size);
+		}
 		Pageable pageable = createPageable(page, size, sort, direction);
 		Page<ProductResponse> productPage = productService.getProductsByName(name, pageable);
 		return ResponseEntity.ok(PageResponse.from(productPage));
@@ -95,12 +101,14 @@ class ProductController {
 			@ApiResponse(responseCode = "404", description = "Product not found") })
 	ResponseEntity<ProductResponse> getProductById(@Parameter(description = "Product ID") @PathVariable Long id) {
 
-		log.debug("REST request to get product by ID: {}", id);
+		if (log.isDebugEnabled()) {
+			log.debug("REST request to get product by ID: {}", id);
+		}
 		try {
 			ProductResponse product = productService.getProductById(id);
 			return ResponseEntity.ok(product);
 		}
-		catch (EntityNotFoundException entityNotFoundException) {
+		catch (EntityNotFoundException _) {
 			log.warn(PRODUCT_NOT_FOUND_WITH_ID, id);
 			return ResponseEntity.notFound().build();
 		}
@@ -116,7 +124,9 @@ class ProductController {
 	ResponseEntity<ProductResponse> createProduct(
 			@Parameter(description = "Product to create") @Valid @RequestBody ProductRequest request) {
 
-		log.debug("REST request to create product: {}", request);
+		if (log.isDebugEnabled()) {
+			log.debug("REST request to create product: {}", request);
+		}
 		try {
 			ProductResponse createdProduct = productService.createProduct(request);
 			return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
@@ -138,12 +148,14 @@ class ProductController {
 	ResponseEntity<ProductResponse> updateProduct(@Parameter(description = "Product ID") @PathVariable Long id,
 			@Parameter(description = "Updated product") @Valid @RequestBody ProductRequest request) {
 
-		log.debug("REST request to update product with ID: {}, request: {}", id, request);
+		if (log.isDebugEnabled()) {
+			log.debug("REST request to update product with ID: {}, request: {}", id, request);
+		}
 		try {
 			ProductResponse updatedProduct = productService.updateProduct(id, request);
 			return ResponseEntity.ok(updatedProduct);
 		}
-		catch (EntityNotFoundException entityNotFoundException) {
+		catch (EntityNotFoundException _) {
 			log.warn(PRODUCT_NOT_FOUND_WITH_ID, id);
 			return ResponseEntity.notFound().build();
 		}
@@ -159,12 +171,14 @@ class ProductController {
 			@ApiResponse(responseCode = "404", description = "Product not found") })
 	ResponseEntity<Void> deleteProduct(@Parameter(description = "Product ID") @PathVariable Long id) {
 
-		log.debug("REST request to delete product with ID: {}", id);
+		if (log.isDebugEnabled()) {
+			log.debug("REST request to delete product with ID: {}", id);
+		}
 		try {
 			productService.deleteProduct(id);
 			return ResponseEntity.noContent().build();
 		}
-		catch (EntityNotFoundException entityNotFoundException) {
+		catch (EntityNotFoundException _) {
 			log.warn(PRODUCT_NOT_FOUND_WITH_ID, id);
 			return ResponseEntity.notFound().build();
 		}

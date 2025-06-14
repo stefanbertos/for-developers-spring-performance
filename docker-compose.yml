@@ -31,9 +31,6 @@ services:
       - '--web.enable-lifecycle'
     ports:
       - "9090:9090"
-    depends_on:
-      app:
-        condition: service_healthy
     restart: unless-stopped
 
   grafana:

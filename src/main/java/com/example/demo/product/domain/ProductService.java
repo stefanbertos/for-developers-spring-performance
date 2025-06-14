@@ -33,7 +33,9 @@ public class ProductService {
 	 */
 	@Transactional(readOnly = true)
 	public Page<ProductResponse> getAllProducts(Pageable pageable) {
-		log.debug("Getting all products with pagination: {}", pageable);
+		if (log.isDebugEnabled()) {
+			log.debug("Getting all products with pagination: {}", pageable);
+		}
 		return productRepository.findAll(pageable).map(ProductResponse::fromEntity);
 	}
 
@@ -45,7 +47,9 @@ public class ProductService {
 	 */
 	@Transactional(readOnly = true)
 	public Page<ProductResponse> getProductsByCategory(String category, Pageable pageable) {
-		log.debug("Getting products by category: {} with pagination: {}", category, pageable);
+		if (log.isDebugEnabled()) {
+			log.debug("Getting products by category: {} with pagination: {}", category, pageable);
+		}
 		return productRepository.findByCategory(category, pageable).map(ProductResponse::fromEntity);
 	}
 
@@ -57,7 +61,9 @@ public class ProductService {
 	 */
 	@Transactional(readOnly = true)
 	public Page<ProductResponse> getProductsByName(String name, Pageable pageable) {
-		log.debug("Getting products by name containing: {} with pagination: {}", name, pageable);
+		if (log.isDebugEnabled()) {
+			log.debug("Getting products by name containing: {} with pagination: {}", name, pageable);
+		}
 		return productRepository.findByNameContainingIgnoreCase(name, pageable).map(ProductResponse::fromEntity);
 	}
 
@@ -69,7 +75,9 @@ public class ProductService {
 	 */
 	@Transactional(readOnly = true)
 	public ProductResponse getProductById(Long id) {
-		log.debug("Getting product by ID: {}", id);
+		if (log.isDebugEnabled()) {
+			log.debug("Getting product by ID: {}", id);
+		}
 		return productRepository.findById(id)
 			.map(ProductResponse::fromEntity)
 			.orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + id));
@@ -82,7 +90,9 @@ public class ProductService {
 	 */
 	@Transactional
 	public ProductResponse createProduct(ProductRequest request) {
-		log.debug("Creating product: {}", request);
+		if (log.isDebugEnabled()) {
+			log.debug("Creating product: {}", request);
+		}
 
 		// Check if product with same name already exists
 		Optional<Product> existingProduct = productRepository.findByNameIgnoreCase(request.name());
@@ -108,7 +118,9 @@ public class ProductService {
 	 */
 	@Transactional
 	public ProductResponse updateProduct(Long id, ProductRequest request) {
-		log.debug("Updating product with ID: {}, request: {}", id, request);
+		if (log.isDebugEnabled()) {
+			log.debug("Updating product with ID: {}, request: {}", id, request);
+		}
 
 		Product product = productRepository.findById(id)
 			.orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + id));
@@ -139,7 +151,9 @@ public class ProductService {
 	 */
 	@Transactional
 	public void deleteProduct(Long id) {
-		log.debug("Deleting product with ID: {}", id);
+		if (log.isDebugEnabled()) {
+			log.debug("Deleting product with ID: {}", id);
+		}
 
 		if (!productRepository.existsById(id)) {
 			log.warn("Product not found with ID: {}", id);

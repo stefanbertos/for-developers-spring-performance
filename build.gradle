@@ -77,7 +77,7 @@ sonarqube {
 	properties {
 		property "sonar.projectKey", "product-catalog"
 		property "sonar.host.url", "http://localhost:9000"
-		property "sonar.token", "sqa_4b9fded5d39973445a2e185aa79ad2d96f74e247"
+		property "sonar.token", "sqa_56c9202206133c743190e1ab734cd9af9b719e4d"
 	}
 }
 
