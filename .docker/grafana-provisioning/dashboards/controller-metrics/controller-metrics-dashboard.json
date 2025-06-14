@@ -1,0 +1,83 @@
+{
+  "id": null,
+  "title": "Spring Controller Metrics",
+  "tags": ["spring", "controller", "http"],
+  "timezone": "browser",
+  "schemaVersion": 30,
+  "version": 2,
+  "refresh": "10s",
+  "panels": [
+    {
+      "type": "graph",
+      "title": "Controller Request Count",
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_requests_seconds_count{controller=\"ProductController\"}[1m])) by (method)",
+          "legendFormat": "{{method}}"
+        }
+      ],
+      "datasource": "Prometheus",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 }
+    },
+    {
+      "type": "graph",
+      "title": "Controller Request Duration (avg)",
+      "targets": [
+        {
+          "expr": "avg(rate(http_server_requests_seconds_sum{controller=\"ProductController\"}[1m]) / rate(http_server_requests_seconds_count{controller=\"ProductController\"}[1m])) by (method)",
+          "legendFormat": "{{method}}"
+        }
+      ],
+      "datasource": "Prometheus",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 }
+    },
+    {
+      "type": "graph",
+      "title": "Controller Request Duration (min)",
+      "targets": [
+        {
+          "expr": "min(http_server_requests_seconds_sum{controller=\"ProductController\"}) by (method)",
+          "legendFormat": "{{method}}"
+        }
+      ],
+      "datasource": "Prometheus",
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 }
+    },
+    {
+      "type": "graph",
+      "title": "Controller Request Duration (max)",
+      "targets": [
+        {
+          "expr": "max(http_server_requests_seconds_max{controller=\"ProductController\"}) by (method)",
+          "legendFormat": "{{method}}"
+        }
+      ],
+      "datasource": "Prometheus",
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 }
+    },
+    {
+      "type": "graph",
+      "title": "Controller Request Duration (p99)",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{controller=\"ProductController\"}[5m])) by (le, method))",
+          "legendFormat": "p99 {{method}}"
+        }
+      ],
+      "datasource": "Prometheus",
+      "gridPos": { "x": 0, "y": 16, "w": 12, "h": 8 }
+    },
+    {
+      "type": "graph",
+      "title": "Controller Request Errors",
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_requests_seconds_count{controller=\"ProductController\",status=~\"5..\"}[1m])) by (method)",
+          "legendFormat": "Errors {{method}}"
+        }
+      ],
+      "datasource": "Prometheus",
+      "gridPos": { "x": 12, "y": 16, "w": 12, "h": 8 }
+    }
+  ]
+}

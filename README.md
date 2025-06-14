@@ -209,3 +209,4 @@ A reactive implementation using Spring WebFlux will be available in a separate b
 ## TODO
 - Add more specialized dashboards for specific application features
 - Implement custom metrics for business KPIs
+- https://scs-architecture.org/

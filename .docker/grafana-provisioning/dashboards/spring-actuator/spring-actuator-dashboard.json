@@ -1,0 +1,89 @@
+{
+  "id": null,
+  "title": "Spring Boot Actuator Metrics (Full)",
+  "tags": ["spring", "actuator", "jvm", "full"],
+  "timezone": "browser",
+  "schemaVersion": 30,
+  "version": 2,
+  "refresh": "10s",
+  "rows": [
+    {
+      "title": "JVM Memory",
+      "panels": [
+        { "type": "graph", "title": "Heap Used", "targets": [{ "expr": "jvm_memory_used_bytes{area=\"heap\"}", "legendFormat": "Heap" }], "datasource": "Prometheus" },
+        { "type": "graph", "title": "Non-Heap Used", "targets": [{ "expr": "jvm_memory_used_bytes{area=\"nonheap\"}", "legendFormat": "Non-Heap" }], "datasource": "Prometheus" },
+        { "type": "graph", "title": "JVM Memory Max", "targets": [{ "expr": "jvm_memory_max_bytes", "legendFormat": "Max" }], "datasource": "Prometheus" }
+      ]
+    },
+    {
+      "title": "JVM Threads",
+      "panels": [
+        { "type": "graph", "title": "Live Threads", "targets": [{ "expr": "jvm_threads_live", "legendFormat": "Live" }], "datasource": "Prometheus" },
+        { "type": "graph", "title": "Peak Threads", "targets": [{ "expr": "jvm_threads_peak", "legendFormat": "Peak" }], "datasource": "Prometheus" },
+        { "type": "graph", "title": "Daemon Threads", "targets": [{ "expr": "jvm_threads_daemon", "legendFormat": "Daemon" }], "datasource": "Prometheus" }
+      ]
+    },
+    {
+      "title": "JVM GC",
+      "panels": [
+        { "type": "graph", "title": "GC Pause Duration", "targets": [{ "expr": "rate(jvm_gc_pause_seconds_sum[1m])", "legendFormat": "GC Pause" }], "datasource": "Prometheus" },
+        { "type": "graph", "title": "GC Pause Count", "targets": [{ "expr": "rate(jvm_gc_pause_seconds_count[1m])", "legendFormat": "GC Count" }], "datasource": "Prometheus" }
+      ]
+    },
+    {
+      "title": "Process",
+      "panels": [
+        { "type": "graph", "title": "CPU Usage", "targets": [{ "expr": "process_cpu_usage", "legendFormat": "CPU Usage" }], "datasource": "Prometheus" },
+        { "type": "graph", "title": "Uptime", "targets": [{ "expr": "process_uptime_seconds", "legendFormat": "Uptime" }], "datasource": "Prometheus" },
+        { "type": "graph", "title": "Open Files", "targets": [{ "expr": "process_files_open_files", "legendFormat": "Open Files" }], "datasource": "Prometheus" }
+      ]
+    },
+    {
+      "title": "System",
+      "panels": [
+        { "type": "graph", "title": "System Load (1m)", "targets": [{ "expr": "system_load_average_1m", "legendFormat": "Load 1m" }], "datasource": "Prometheus" },
+        { "type": "graph", "title": "File Descriptors", "targets": [{ "expr": "process_files_max_files", "legendFormat": "Max Files" }], "datasource": "Prometheus" }
+      ]
+    },
+    {
+      "title": "HTTP Server",
+      "panels": [
+        { "type": "graph", "title": "Requests Total", "targets": [{ "expr": "sum(rate(http_server_requests_seconds_count[1m])) by (method)", "legendFormat": "{{method}}" }], "datasource": "Prometheus" },
+        { "type": "graph", "title": "Request Duration (avg)", "targets": [{ "expr": "avg(rate(http_server_requests_seconds_sum[1m]) / rate(http_server_requests_seconds_count[1m])) by (method)", "legendFormat": "{{method}}" }], "datasource": "Prometheus" },
+        { "type": "graph", "title": "Request Duration (max)", "targets": [{ "expr": "max(http_server_requests_seconds_max) by (method)", "legendFormat": "{{method}}" }], "datasource": "Prometheus" },
+        { "type": "graph", "title": "Request Errors (5xx)", "targets": [{ "expr": "sum(rate(http_server_requests_seconds_count{status=~\"5..\"}[1m])) by (method)", "legendFormat": "Errors {{method}}" }], "datasource": "Prometheus" }
+      ]
+    },
+    {
+      "title": "DataSource",
+      "panels": [
+        { "type": "graph", "title": "Active Connections", "targets": [{ "expr": "hikaricp_connections_active", "legendFormat": "Active" }], "datasource": "Prometheus" },
+        { "type": "graph", "title": "Idle Connections", "targets": [{ "expr": "hikaricp_connections_idle", "legendFormat": "Idle" }], "datasource": "Prometheus" },
+        { "type": "graph", "title": "Pending Connections", "targets": [{ "expr": "hikaricp_connections_pending", "legendFormat": "Pending" }], "datasource": "Prometheus" },
+        { "type": "graph", "title": "Connection Usage", "targets": [{ "expr": "hikaricp_connections_usage_seconds_max", "legendFormat": "Usage Max" }], "datasource": "Prometheus" }
+      ]
+    },
+    {
+      "title": "Cache",
+      "panels": [
+        { "type": "graph", "title": "Cache Gets", "targets": [{ "expr": "cache_gets_total", "legendFormat": "Gets" }], "datasource": "Prometheus" },
+        { "type": "graph", "title": "Cache Hits", "targets": [{ "expr": "cache_hits_total", "legendFormat": "Hits" }], "datasource": "Prometheus" },
+        { "type": "graph", "title": "Cache Misses", "targets": [{ "expr": "cache_misses_total", "legendFormat": "Misses" }], "datasource": "Prometheus" },
+        { "type": "graph", "title": "Cache Evictions", "targets": [{ "expr": "cache_evictions_total", "legendFormat": "Evictions" }], "datasource": "Prometheus" }
+      ]
+    },
+    {
+      "title": "Logback",
+      "panels": [
+        { "type": "graph", "title": "Log Events", "targets": [{ "expr": "logback_events_total", "legendFormat": "Events" }], "datasource": "Prometheus" }
+      ]
+    },
+    {
+      "title": "Tomcat",
+      "panels": [
+        { "type": "graph", "title": "Tomcat Sessions Active", "targets": [{ "expr": "tomcat_sessions_active_max", "legendFormat": "Active Max" }], "datasource": "Prometheus" },
+        { "type": "graph", "title": "Tomcat Sessions Alive", "targets": [{ "expr": "tomcat_sessions_alive_max", "legendFormat": "Alive Max" }], "datasource": "Prometheus" }
+      ]
+    }
+  ]
+}

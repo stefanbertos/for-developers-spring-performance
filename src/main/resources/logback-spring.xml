@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <http>
+            <url>http://localhost:3100/loki/api/v1/push</url>
+            <asynchronous>true</asynchronous>
+            <connectTimeoutMs>2000</connectTimeoutMs>
+            <readTimeoutMs>5000</readTimeoutMs>
+            <batchMaxItems>1000</batchMaxItems>
+            <batchMaxBytes>1048576</batchMaxBytes>
+            <batchTimeoutMs>2000</batchTimeoutMs>
+        </http>
+        <labels>
+            <label name="app" value="product-catalog-api"/>
+            <label name="env" value="dev"/>
+        </labels>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="LOKI"/>
+    </root>
+    <logger name="com.example.demo" level="DEBUG"/>
+</configuration>

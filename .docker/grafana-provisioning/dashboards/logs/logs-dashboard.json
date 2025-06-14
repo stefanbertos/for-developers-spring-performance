@@ -1,0 +1,23 @@
+{
+  "id": null,
+  "title": "Application Logs",
+  "tags": ["spring", "logs", "loki"],
+  "timezone": "browser",
+  "schemaVersion": 30,
+  "version": 1,
+  "refresh": "10s",
+  "panels": [
+    {
+      "type": "logs",
+      "title": "Application Log Stream",
+      "datasource": "Loki",
+      "targets": [
+        {
+          "expr": "{container=\"product-catalog-app\"}",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 16 }
+    }
+  ]
+}

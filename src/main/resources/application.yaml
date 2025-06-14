@@ -32,14 +32,12 @@ management:
     sampling:
       probability: 1.0
     enabled: true
-  otlp:
-    endpoint: http://localhost:4317
-    metrics:
-      export:
-        enabled: false
-    logs:
-      export:
-        enabled: false
+
+otel:
+  metrics:
+    exporter: none
+  logs:
+    exporter: none
 
 springdoc:
   api-docs:
