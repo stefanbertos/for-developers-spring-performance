@@ -72,3 +72,8 @@ springdoc:
 currency:
   exchange:
     frankfurter-api-url: https://api.frankfurter.app/latest?from=EUR&to=USD
+
+# Logging configuration
+logging:
+  level:
+    com.example.demo: DEBUG
