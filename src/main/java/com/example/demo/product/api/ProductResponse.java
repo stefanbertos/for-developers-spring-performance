@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 /**
  * Record representing a product response.
  */
-public record ProductResponse(Long id, String name, String description, BigDecimal priceUSD, BigDecimal priceEUR, String category,
-		String imageUrl, boolean available, LocalDateTime createdAt, LocalDateTime updatedAt) {
+public record ProductResponse(Long id, String name, String description, BigDecimal priceUSD, BigDecimal priceEUR,
+		String category, String imageUrl, boolean available, LocalDateTime createdAt, LocalDateTime updatedAt) {
 	/**
 	 * Creates a ProductResponse from a Product entity.
 	 * @param product the product entity
@@ -32,8 +32,8 @@ public record ProductResponse(Long id, String name, String description, BigDecim
 		BigDecimal priceUSD = product.getPrice();
 		BigDecimal priceEUR = currencyExchangeService.convertUsdToEur(priceUSD);
 
-		return new ProductResponse(product.getId(), product.getName(), product.getDescription(), priceUSD,
-				priceEUR, product.getCategory(), product.getImageUrl(), product.isAvailable(), product.getCreatedAt(),
+		return new ProductResponse(product.getId(), product.getName(), product.getDescription(), priceUSD, priceEUR,
+				product.getCategory(), product.getImageUrl(), product.isAvailable(), product.getCreatedAt(),
 				product.getUpdatedAt());
 	}
 }

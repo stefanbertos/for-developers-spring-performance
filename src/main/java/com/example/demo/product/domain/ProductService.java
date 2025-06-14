@@ -21,6 +21,7 @@ public class ProductService {
 	private static final Logger log = LoggerFactory.getLogger(ProductService.class);
 
 	private final ProductRepository productRepository;
+
 	private final CurrencyExchangeService currencyExchangeService;
 
 	public ProductService(ProductRepository productRepository, CurrencyExchangeService currencyExchangeService) {
@@ -38,7 +39,8 @@ public class ProductService {
 		if (log.isDebugEnabled()) {
 			log.debug("Getting all products with pagination: {}", pageable);
 		}
-		return productRepository.findAll(pageable).map(product -> ProductResponse.fromEntity(product, currencyExchangeService));
+		return productRepository.findAll(pageable)
+			.map(product -> ProductResponse.fromEntity(product, currencyExchangeService));
 	}
 
 	/**
@@ -52,7 +54,8 @@ public class ProductService {
 		if (log.isDebugEnabled()) {
 			log.debug("Getting products by category: {} with pagination: {}", category, pageable);
 		}
-		return productRepository.findByCategory(category, pageable).map(product -> ProductResponse.fromEntity(product, currencyExchangeService));
+		return productRepository.findByCategory(category, pageable)
+			.map(product -> ProductResponse.fromEntity(product, currencyExchangeService));
 	}
 
 	/**
@@ -66,7 +69,8 @@ public class ProductService {
 		if (log.isDebugEnabled()) {
 			log.debug("Getting products by name containing: {} with pagination: {}", name, pageable);
 		}
-		return productRepository.findByNameContainingIgnoreCase(name, pageable).map(product -> ProductResponse.fromEntity(product, currencyExchangeService));
+		return productRepository.findByNameContainingIgnoreCase(name, pageable)
+			.map(product -> ProductResponse.fromEntity(product, currencyExchangeService));
 	}
 
 	/**

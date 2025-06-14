@@ -68,7 +68,8 @@ class ProductPerformanceTest extends MySQLTestContainer {
 		if ("production".equals(testMode)) {
 			baseUrl = productionEndpoint;
 			System.out.println("Running in production mode against " + baseUrl);
-		} else {
+		}
+		else {
 			baseUrl = ""; // Empty string for local mode (will use the random port)
 			System.out.println("Running in local mode");
 
@@ -109,8 +110,7 @@ class ProductPerformanceTest extends MySQLTestContainer {
 			}
 
 			Instant batchStart = Instant.now();
-			ResponseEntity<PageResponse<ProductResponse>> response = restTemplate.exchange(
-					url, HttpMethod.GET, null,
+			ResponseEntity<PageResponse<ProductResponse>> response = restTemplate.exchange(url, HttpMethod.GET, null,
 					new ParameterizedTypeReference<PageResponse<ProductResponse>>() {
 					}, page, PAGE_SIZE);
 			Duration batchDuration = Duration.between(batchStart, Instant.now());
@@ -130,8 +130,8 @@ class ProductPerformanceTest extends MySQLTestContainer {
 
 			// Assert that each batch execution time is under the configured threshold
 			assertThat(batchExecutionTimeMs).isLessThanOrEqualTo(maxExecutionTimeMs);
-			System.out.println("Retrieved page " + page + " with " + 
-				(pageResponse != null ? pageResponse.content().size() : 0) + " products");
+			System.out.println("Retrieved page " + page + " with "
+					+ (pageResponse != null ? pageResponse.content().size() : 0) + " products");
 		}
 
 		Duration totalDuration = Duration.between(start, Instant.now());
@@ -151,8 +151,7 @@ class ProductPerformanceTest extends MySQLTestContainer {
 			url = "/api/v1/products";
 		}
 
-		ResponseEntity<ProductResponse> response = restTemplate.postForEntity(url, request,
-				ProductResponse.class);
+		ResponseEntity<ProductResponse> response = restTemplate.postForEntity(url, request, ProductResponse.class);
 
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 		assertThat(response.getBody()).isNotNull();

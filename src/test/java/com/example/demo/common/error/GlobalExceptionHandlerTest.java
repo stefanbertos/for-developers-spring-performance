@@ -134,8 +134,8 @@ class GlobalExceptionHandlerTest {
 	@Test
 	void handleNoResourceFoundException_ShouldReturnProblemDetail() {
 		// Arrange
-		org.springframework.web.servlet.resource.NoResourceFoundException exception = 
-			new org.springframework.web.servlet.resource.NoResourceFoundException(HttpMethod.GET, "Resource not found");
+		org.springframework.web.servlet.resource.NoResourceFoundException exception = new org.springframework.web.servlet.resource.NoResourceFoundException(
+				HttpMethod.GET, "Resource not found");
 
 		// Act
 		ProblemDetail problemDetail = exceptionHandler.handleNoResourceFoundException(exception);

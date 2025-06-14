@@ -9,16 +9,15 @@ import org.springframework.boot.context.properties.bind.ConstructorBinding;
 @ConfigurationProperties(prefix = "currency.exchange")
 public record CurrencyExchangeProperties(String frankfurterApiUrl, int maxRetries) {
 
-    /**
-     * Creates a new instance of CurrencyExchangeProperties.
-     * 
-     * @param frankfurterApiUrl the URL for the Frankfurter API
-     * @param maxRetries the maximum number of retries for API calls
-     */
-    @ConstructorBinding
-    public CurrencyExchangeProperties {
-        if (maxRetries < 0) {
-            throw new IllegalArgumentException("maxRetries must be non-negative");
-        }
-    }
+	/**
+	 * Creates a new instance of CurrencyExchangeProperties.
+	 * @param frankfurterApiUrl the URL for the Frankfurter API
+	 * @param maxRetries the maximum number of retries for API calls
+	 */
+	@ConstructorBinding
+	public CurrencyExchangeProperties {
+		if (maxRetries < 0) {
+			throw new IllegalArgumentException("maxRetries must be non-negative");
+		}
+	}
 }

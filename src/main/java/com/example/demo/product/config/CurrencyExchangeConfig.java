@@ -9,4 +9,5 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableConfigurationProperties(CurrencyExchangeProperties.class)
 public class CurrencyExchangeConfig {
+
 }
