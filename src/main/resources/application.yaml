@@ -22,6 +22,12 @@ spring:
     virtual:
       enabled: true
 
+  cache:
+    type: caffeine
+    cache-names: currency
+    caffeine:
+      spec: expireAfterWrite=10s
+
 # Actuator configuration
 management:
   endpoints:

@@ -3,11 +3,11 @@ package com.example.demo.product.domain;
 import com.example.demo.product.config.CurrencyExchangeProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestClientException;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -31,24 +31,33 @@ public class CurrencyExchangeService {
 	}
 
 	/**
-	 * Get the exchange rate from EUR to USD.
+	 * Record representing a response from the Frankfurter API.
+	 */
+	public record FrankfurterResponse(String amount, String base, String date, Map<String, BigDecimal> rates) {
+	}
+
+	/**
+	 * Get the exchange rate from one currency to another.
+	 * @param from the source currency
+	 * @param to the target currency
 	 * @return the exchange rate
 	 */
+	@Cacheable(value = "currency", key = "#from + '-' + #to")
 	@Retryable(maxAttempts = 3, retryFor = { Exception.class }, noRetryFor = { IllegalArgumentException.class })
-	public BigDecimal getEurToUsdRate() {
+	public BigDecimal getExchangeRate(String from, String to) {
 		if (log.isDebugEnabled()) {
-			log.debug("Fetching EUR to USD exchange rate from Frankfurter API");
+			log.debug("Fetching {} to {} exchange rate from Frankfurter API", from, to);
 		}
 
 		FrankfurterResponse response = restClient.get()
-			.uri(properties.frankfurterApiUrl())
+			.uri(properties.frankfurterApiUrl()+"from="+from+"&to="+to)
 			.retrieve()
 			.body(FrankfurterResponse.class);
 
-		if (response != null && response.rates() != null && response.rates().containsKey("USD")) {
-			BigDecimal rate = response.rates().get("USD");
+		if (response != null && response.rates() != null && response.rates().containsKey(to)) {
+			BigDecimal rate = response.rates().get(to);
 			if (log.isDebugEnabled()) {
-				log.debug("Received EUR to USD exchange rate: {}", rate);
+				log.debug("Received {} to {} exchange rate: {}", from, to, rate);
 			}
 			return rate;
 		}
@@ -64,34 +73,8 @@ public class CurrencyExchangeService {
 	 * @return default exchange rate (1.0)
 	 */
 	@Recover
-	public BigDecimal recoverGetEurToUsdRate(Exception e) {
+	public BigDecimal getExchangeRate(Exception e) {
 		log.error("Error fetching exchange rate from Frankfurter API after retries", e);
 		return BigDecimal.ONE; // Default to 1:1 if API fails after all retries
 	}
-
-	/**
-	 * Convert USD to EUR.
-	 * @param usdAmount amount in USD
-	 * @return amount in EUR
-	 */
-	public BigDecimal convertUsdToEur(BigDecimal usdAmount) {
-		if (usdAmount == null) {
-			return BigDecimal.ZERO;
-		}
-
-		BigDecimal rate = getEurToUsdRate();
-		if (rate.compareTo(BigDecimal.ZERO) <= 0) {
-			log.warn("Invalid exchange rate: {}, using 1:1", rate);
-			rate = BigDecimal.ONE;
-		}
-
-		return usdAmount.divide(rate, 2, RoundingMode.HALF_UP);
-	}
-
-	/**
-	 * Record representing a response from the Frankfurter API.
-	 */
-	public record FrankfurterResponse(String amount, String base, String date, Map<String, BigDecimal> rates) {
-	}
-
 }

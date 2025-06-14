@@ -30,7 +30,10 @@ public record ProductResponse(Long id, String name, String description, BigDecim
 	 */
 	public static ProductResponse fromEntity(Product product, CurrencyExchangeService currencyExchangeService) {
 		BigDecimal priceUSD = product.getPrice();
-		BigDecimal priceEUR = currencyExchangeService.convertUsdToEur(priceUSD);
+		BigDecimal rate = currencyExchangeService.getExchangeRate("USD", "EUR");
+		BigDecimal priceEUR = (rate != null && rate.compareTo(BigDecimal.ZERO) > 0)
+			? priceUSD.divide(rate, 2, java.math.RoundingMode.HALF_UP)
+			: priceUSD;
 
 		return new ProductResponse(product.getId(), product.getName(), product.getDescription(), priceUSD, priceEUR,
 				product.getCategory(), product.getImageUrl(), product.isAvailable(), product.getCreatedAt(),
