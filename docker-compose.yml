@@ -17,7 +17,6 @@ services:
       timeout: 5s
       retries: 5
 
-
   sonarqube:
     image: sonarqube:community
     hostname: sonarqube
@@ -37,8 +36,7 @@ services:
       - sonarqube_temp:/opt/sonarqube/temp
     ports:
       - "9000:9000"
-    networks:
-      - ${NETWORK_TYPE:-ipv4}
+
   db:
     image: postgres:17
     healthcheck:
@@ -55,8 +53,6 @@ services:
     volumes:
       - postgresql:/var/lib/postgresql
       - postgresql_data:/var/lib/postgresql/data
-    networks:
-      - ${NETWORK_TYPE:-ipv4}
 
 
   app:
@@ -87,15 +83,20 @@ services:
       - "6831:6831/udp" # Jaeger agent UDP (thrift)
       - "4317:4317"     # OTLP/gRPC
       - "4318:4318"     # OTLP/HTTP
-    networks:
-      - ${NETWORK_TYPE:-ipv4}
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
 
 
 volumes:
   mysql-data:
-  prometheus-data:
-  grafana-data:
-  tempo-data:
   sonarqube_data:
   sonarqube_temp:
   sonarqube_extensions:
@@ -103,16 +104,3 @@ volumes:
   postgresql:
   postgresql_data:
 
-networks:
-  ipv4:
-    driver: bridge
-    enable_ipv6: false
-  dual:
-    driver: bridge
-    enable_ipv6: true
-    ipam:
-      config:
-        - subnet: "192.168.2.0/24"
-          gateway: "192.168.2.1"
-        - subnet: "2001:db8:2::/64"
-          gateway: "2001:db8:2::1"

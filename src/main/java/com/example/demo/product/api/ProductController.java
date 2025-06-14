@@ -1,6 +1,7 @@
 package com.example.demo.product.api;
 
 import com.example.demo.product.domain.ProductService;
+import io.micrometer.core.annotation.Timed;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/products")
 @Tag(name = "Product Catalog", description = "Product catalog management API")
+@Timed(value = "http.server.requests", extraTags = {"controller", "ProductController"})
 class ProductController {
 
 	private static final Logger log = LoggerFactory.getLogger(ProductController.class);
@@ -35,6 +37,7 @@ class ProductController {
 		this.productService = productService;
 	}
 
+	@Timed(value = "http.server.requests", extraTags = {"controller", "ProductController", "method", "getAllProducts"})
 	@GetMapping
 	@Operation(summary = "Get all products", description = "Returns a paginated list of all products")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved products",
@@ -53,6 +56,7 @@ class ProductController {
 		return ResponseEntity.ok(PageResponse.from(productPage));
 	}
 
+	@Timed(value = "http.server.requests", extraTags = {"controller", "ProductController", "method", "getProductsByCategory"})
 	@GetMapping("/category/{category}")
 	@Operation(summary = "Get products by category",
 			description = "Returns a paginated list of products in the specified category")
@@ -73,6 +77,7 @@ class ProductController {
 		return ResponseEntity.ok(PageResponse.from(productPage));
 	}
 
+	@Timed(value = "http.server.requests", extraTags = {"controller", "ProductController", "method", "searchProductsByName"})
 	@GetMapping("/search")
 	@Operation(summary = "Search products by name",
 			description = "Returns a paginated list of products with names containing the search term")
@@ -93,6 +98,7 @@ class ProductController {
 		return ResponseEntity.ok(PageResponse.from(productPage));
 	}
 
+	@Timed(value = "http.server.requests", extraTags = {"controller", "ProductController", "method", "getProductById"})
 	@GetMapping("/{id}")
 	@Operation(summary = "Get product by ID", description = "Returns a single product by its ID")
 	@ApiResponses(value = {
@@ -114,6 +120,7 @@ class ProductController {
 		}
 	}
 
+	@Timed(value = "http.server.requests", extraTags = {"controller", "ProductController", "method", "createProduct"})
 	@PostMapping
 	@Operation(summary = "Create a new product", description = "Creates a new product and returns the created product")
 	@ApiResponses(value = {
@@ -137,6 +144,7 @@ class ProductController {
 		}
 	}
 
+	@Timed(value = "http.server.requests", extraTags = {"controller", "ProductController", "method", "updateProduct"})
 	@PutMapping("/{id}")
 	@Operation(summary = "Update an existing product",
 			description = "Updates an existing product and returns the updated product")
@@ -165,6 +173,7 @@ class ProductController {
 		}
 	}
 
+	@Timed(value = "http.server.requests", extraTags = {"controller", "ProductController", "method", "deleteProduct"})
 	@DeleteMapping("/{id}")
 	@Operation(summary = "Delete a product", description = "Deletes a product by its ID")
 	@ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Product deleted successfully"),
