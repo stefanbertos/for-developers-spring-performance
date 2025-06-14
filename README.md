@@ -118,5 +118,4 @@ A reactive implementation using Spring WebFlux will be available in a separate b
 
 @TODO
 test metrics, dashboards
-add call to 3rd party api fia RestClient
 add performance tests

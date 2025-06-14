@@ -96,7 +96,7 @@ logger.atDebug()
 
 ## 18. HTTP Clients
 * **Outgoing HTTP Requests:** Use the Spring Framework 6+ **`RestClient`** for making synchronous or asynchronous HTTP calls
-* Add default retry with reasonable retry policy
+* Add default retry with reasonable retry policy use @Retryable 
 
 ## 19. REST Controllers
 * **Limit Records Returned:** Don't create controllers with methods where clients can retrieve unlimited number of records. Use pageable option.

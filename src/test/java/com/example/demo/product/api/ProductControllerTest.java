@@ -42,7 +42,7 @@ class ProductControllerTest {
 	void setUp() {
 		// Setup test product response
 		productResponse = new ProductResponse(1L, "Test Product", "Test Description", new BigDecimal("99.99"),
-				"Test Category", "https://example.com/test.jpg", true, now, now);
+				new BigDecimal("90.90"), "Test Category", "https://example.com/test.jpg", true, now, now);
 
 		// Setup test product request
 		productRequest = new ProductRequest("Test Product", "Test Description", new BigDecimal("99.99"),

@@ -21,9 +21,11 @@ public class ProductService {
 	private static final Logger log = LoggerFactory.getLogger(ProductService.class);
 
 	private final ProductRepository productRepository;
+	private final CurrencyExchangeService currencyExchangeService;
 
-	public ProductService(ProductRepository productRepository) {
+	public ProductService(ProductRepository productRepository, CurrencyExchangeService currencyExchangeService) {
 		this.productRepository = productRepository;
+		this.currencyExchangeService = currencyExchangeService;
 	}
 
 	/**
@@ -36,7 +38,7 @@ public class ProductService {
 		if (log.isDebugEnabled()) {
 			log.debug("Getting all products with pagination: {}", pageable);
 		}
-		return productRepository.findAll(pageable).map(ProductResponse::fromEntity);
+		return productRepository.findAll(pageable).map(product -> ProductResponse.fromEntity(product, currencyExchangeService));
 	}
 
 	/**
@@ -50,7 +52,7 @@ public class ProductService {
 		if (log.isDebugEnabled()) {
 			log.debug("Getting products by category: {} with pagination: {}", category, pageable);
 		}
-		return productRepository.findByCategory(category, pageable).map(ProductResponse::fromEntity);
+		return productRepository.findByCategory(category, pageable).map(product -> ProductResponse.fromEntity(product, currencyExchangeService));
 	}
 
 	/**
@@ -64,7 +66,7 @@ public class ProductService {
 		if (log.isDebugEnabled()) {
 			log.debug("Getting products by name containing: {} with pagination: {}", name, pageable);
 		}
-		return productRepository.findByNameContainingIgnoreCase(name, pageable).map(ProductResponse::fromEntity);
+		return productRepository.findByNameContainingIgnoreCase(name, pageable).map(product -> ProductResponse.fromEntity(product, currencyExchangeService));
 	}
 
 	/**
@@ -79,7 +81,7 @@ public class ProductService {
 			log.debug("Getting product by ID: {}", id);
 		}
 		return productRepository.findById(id)
-			.map(ProductResponse::fromEntity)
+			.map(product -> ProductResponse.fromEntity(product, currencyExchangeService))
 			.orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + id));
 	}
 
@@ -106,7 +108,7 @@ public class ProductService {
 
 		Product savedProduct = productRepository.save(product);
 		log.info("Created product with ID: {}", savedProduct.getId());
-		return ProductResponse.fromEntity(savedProduct);
+		return ProductResponse.fromEntity(savedProduct, currencyExchangeService);
 	}
 
 	/**
@@ -141,7 +143,7 @@ public class ProductService {
 
 		Product updatedProduct = productRepository.save(product);
 		log.info("Updated product with ID: {}", updatedProduct.getId());
-		return ProductResponse.fromEntity(updatedProduct);
+		return ProductResponse.fromEntity(updatedProduct, currencyExchangeService);
 	}
 
 	/**

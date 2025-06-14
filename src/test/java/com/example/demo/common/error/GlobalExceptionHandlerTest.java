@@ -144,7 +144,7 @@ class GlobalExceptionHandlerTest {
 		assertThat(problemDetail).isNotNull();
 		assertThat(problemDetail.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
 		assertThat(problemDetail.getTitle()).isEqualTo("Resource Not Found");
-		assertThat(problemDetail.getDetail()).isEqualTo("Resource not found");
+		assertThat(problemDetail.getDetail()).isEqualTo("No static resource Resource not found.");
 		assertThat(problemDetail.getProperties()).containsKey("timestamp");
 	}
 

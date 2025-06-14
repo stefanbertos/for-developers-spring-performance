@@ -28,6 +28,7 @@ class GlobalExceptionHandler {
 	private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
 	private static final String PROBLEM_BASE_URL = "https://api.product-catalog.com/problems";
+
 	private static final String TIMESTAMP = "timestamp";
 
 	/**
@@ -104,7 +105,7 @@ class GlobalExceptionHandler {
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	ProblemDetail handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
 		String message = String.format("Parameter '%s' should be of type '%s'", ex.getName(),
-				ex.getRequiredType());
+				ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : null);
 		log.warn("Type mismatch: {}", message);
 
 		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, message);
