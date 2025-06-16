@@ -210,3 +210,6 @@ A reactive implementation using Spring WebFlux will be available in a separate b
 - Add more specialized dashboards for specific application features
 - Implement custom metrics for business KPIs
 - https://scs-architecture.org/
+acdd techradar
+k6 grafana
+babel
