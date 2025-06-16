@@ -50,7 +50,7 @@ public class CurrencyExchangeService {
 		}
 
 		FrankfurterResponse response = restClient.get()
-			.uri(properties.frankfurterApiUrl()+"from="+from+"&to="+to)
+			.uri(properties.frankfurterApiUrl() + "from=" + from + "&to=" + to)
 			.retrieve()
 			.body(FrankfurterResponse.class);
 
@@ -77,4 +77,5 @@ public class CurrencyExchangeService {
 		log.error("Error fetching exchange rate from Frankfurter API after retries", e);
 		return BigDecimal.ONE; // Default to 1:1 if API fails after all retries
 	}
+
 }

@@ -20,27 +20,26 @@ import java.time.Duration;
 @Configuration
 class RestClientConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(RestClientConfig.class);
+	private static final Logger log = LoggerFactory.getLogger(RestClientConfig.class);
 
-    /**
-     * Creates a RestClient bean with default configuration.
-     * @return the RestClient
-     */
-    @Bean
-    public RestClient restClient() {
-        return RestClient.builder()
-            .requestInterceptor((request, body, execution) -> {
-                if (log.isDebugEnabled()) {
-                    log.debug("Outgoing Request: {} {} Headers: {} Body: {}",
-                        request.getMethod(), request.getURI(), request.getHeaders(), new String(body, StandardCharsets.UTF_8));
-                }
-                return execution.execute(request, body);
-            })
-            .defaultStatusHandler(status -> status.is4xxClientError() || status.is5xxServerError(),
-                (request, response) -> {
-                    throw new RuntimeException("Error calling external API: " + response);
-                })
-            .build();
-    }
+	/**
+	 * Creates a RestClient bean with default configuration.
+	 * @return the RestClient
+	 */
+	@Bean
+	public RestClient restClient() {
+		return RestClient.builder().requestInterceptor((request, body, execution) -> {
+			if (log.isDebugEnabled()) {
+				log.debug("Outgoing Request: {} {} Headers: {} Body: {}", request.getMethod(), request.getURI(),
+						request.getHeaders(), new String(body, StandardCharsets.UTF_8));
+			}
+			return execution.execute(request, body);
+		})
+			.defaultStatusHandler(status -> status.is4xxClientError() || status.is5xxServerError(),
+					(request, response) -> {
+						throw new RuntimeException("Error calling external API: " + response);
+					})
+			.build();
+	}
 
 }
