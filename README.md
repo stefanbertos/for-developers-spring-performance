@@ -214,4 +214,9 @@ A reactive implementation using Spring WebFlux will be available in a separate b
 - babel
   https://github.com/openrewrite/rewrite
 - https://www.mend.io/renovate/
+- spring modulith
+- sending email
+- quartz job
+- spring integration
+- spring batch
 
