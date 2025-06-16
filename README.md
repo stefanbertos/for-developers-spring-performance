@@ -211,7 +211,6 @@ A reactive implementation using Spring WebFlux will be available in a separate b
 - Implement custom metrics for business KPIs
 - https://scs-architecture.org/
 - k6 grafana
-- babel
   https://github.com/openrewrite/rewrite
 - https://www.mend.io/renovate/
 - spring modulith
@@ -219,4 +218,5 @@ A reactive implementation using Spring WebFlux will be available in a separate b
 - quartz job
 - spring integration
 - spring batch
+- Spring Cloud Contracts 
 
