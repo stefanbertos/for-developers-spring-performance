@@ -218,7 +218,11 @@ A reactive implementation using Spring WebFlux will be available in a separate b
 - quartz job
 - spring integration
 - spring batch
-- Spring Cloud Contracts 
+- Spring Cloud Contracts
+- jdk 24 garbage colector options
+- structured concurency
+- jackson spring flags to disable
+- bazel build in monorepo
 - generate draw io diagram or similar
 - CDS - build - training run -first cache file and add it to the image plus Spring AOT
 - Spring buildpacks 
