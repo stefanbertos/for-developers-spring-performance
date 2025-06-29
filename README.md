@@ -219,4 +219,8 @@ A reactive implementation using Spring WebFlux will be available in a separate b
 - spring integration
 - spring batch
 - Spring Cloud Contracts 
+- generate draw io diagram or similar
+- CDS - build - training run -first cache file and add it to the image plus Spring AOT
+- Spring buildpacks 
+- Spring debugger plugin
 
