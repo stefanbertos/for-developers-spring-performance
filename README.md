@@ -127,7 +127,6 @@ The project is configured to enforce 100% code coverage. To generate a coverage 
 
 The report will be available at `build/reports/jacoco/test/html/index.html`
 
-
 ## Distributed Tracing with Jaeger
 
 This project is configured to export OpenTelemetry traces to Jaeger for distributed tracing and visualization.
@@ -170,6 +169,7 @@ This project is configured to export OpenTelemetry traces to Jaeger for distribu
 4. **Notes**
    - Only traces are exported to Jaeger. Metrics and logs are not exported to Jaeger (see `application.yaml`).
    - For metrics, use Prometheus. For logs, use your preferred log aggregation solution.
+
 
 ## Code Quality
 
@@ -215,7 +215,6 @@ The project is configured to use SonarQube for code quality analysis. To run Son
   https://github.com/openrewrite/rewrite
 - https://www.mend.io/renovate/
 - spring modulith
-- sending email
 - quartz job
 - spring integration
 - spring batch
@@ -224,4 +223,4 @@ The project is configured to use SonarQube for code quality analysis. To run Son
 - bazel build in monorepo
 - generate draw io diagram or similar
 - Spring debugger plugin
-
+- refactor common parts into spring starters modules like emails .....

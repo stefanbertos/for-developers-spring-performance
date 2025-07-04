@@ -5,7 +5,6 @@ plugins {
 	id 'jacoco'
 	id("io.spring.javaformat") version "0.0.46"
 	id "org.sonarqube" version "4.3.0.3225"
-	id 'org.springframework.experimental.aot' version '0.13.0' // For AOT
 }
 
 group = 'com.example'
@@ -38,6 +37,7 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9'
 	implementation 'com.github.ben-manes.caffeine:caffeine:3.1.8'
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
 	// Jackson Afterburner uses bytecode generation to improve performance (up to 30-40% in some cases).
 	implementation 'com.fasterxml.jackson.module:jackson-module-afterburner'
@@ -56,9 +56,9 @@ dependencies {
 	implementation 'io.micrometer:micrometer-registry-prometheus'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.testcontainers:mysql'
-	testImplementation 'org.testcontainers:postgresql'
-	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.testcontainers:junit-jupiter:1.21.3'
+	testImplementation 'org.testcontainers:mysql:1.21.3'
+	testImplementation 'com.playtika.testcontainers:embedded-mailhog:3.1.15'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
@@ -104,9 +104,4 @@ sonarqube {
 
 tasks.named("check") {
 	finalizedBy("sonarqube")
-}
-
-springAot {
-	removeYamlSupport = false // Optional: optimize further
-	removeSpelSupport = false
 }
