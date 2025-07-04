@@ -202,9 +202,9 @@ The project is configured to use SonarQube for code quality analysis. To run Son
 
 4. View the results in the SonarQube dashboard
 
-## Alternative Implementations
+5. See renovate dashboard https://developer.mend.io/github/stefanbertos
+6. 
 
-A reactive implementation using Spring WebFlux will be available in a separate branch or repository.
 
 ## TODO
 - Add more specialized dashboards for specific application features
@@ -221,7 +221,6 @@ A reactive implementation using Spring WebFlux will be available in a separate b
 - Spring Cloud Contracts
 - jdk 24 garbage colector options
 - structured concurency
-- jackson spring flags to disable
 - bazel build in monorepo
 - generate draw io diagram or similar
 - CDS - build - training run -first cache file and add it to the image plus Spring AOT

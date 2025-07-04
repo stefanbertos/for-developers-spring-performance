@@ -38,6 +38,10 @@ dependencies {
 	implementation 'com.github.ben-manes.caffeine:caffeine:3.1.8'
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
 
+	// Jackson Afterburner uses bytecode generation to improve performance (up to 30-40% in some cases).
+	implementation 'com.fasterxml.jackson.module:jackson-module-afterburner'
+
+
 	// database
 	implementation 'org.flywaydb:flyway-core'
 	implementation 'org.flywaydb:flyway-mysql'

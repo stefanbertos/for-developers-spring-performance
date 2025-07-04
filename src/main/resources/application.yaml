@@ -28,6 +28,28 @@ spring:
     caffeine:
       spec: expireAfterWrite=10s
 
+  jackson:
+    # ✅ Serialize dates as timestamps (faster than ISO strings)
+    serialization:
+      write-dates-as-timestamps: true
+      fail-on-empty-beans: false
+
+    # ✅ Don't fail on unknown properties (saves time in deserialization)
+    deserialization:
+      fail-on-unknown-properties: false
+
+    # ✅ Don't include nulls (reduces payload size)
+    default-property-inclusion: non_null
+
+    # ✅ Turn off view inclusion (saves CPU)
+    mapper:
+      default-view-inclusion: false
+   # This avoids extra handling for malformed or special JSON input.
+    parser:
+      allow-non-numeric-numbers: false
+      allow-unquoted-control-chars: false
+
+
 # Actuator configuration
 management:
   endpoints:
