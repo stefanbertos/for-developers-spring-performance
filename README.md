@@ -203,7 +203,8 @@ The project is configured to use SonarQube for code quality analysis. To run Son
 4. View the results in the SonarQube dashboard
 
 5. See renovate dashboard https://developer.mend.io/github/stefanbertos
-6. 
+6. ./gradlew clean build -PspringAot
+
 
 
 ## TODO
@@ -219,11 +220,8 @@ The project is configured to use SonarQube for code quality analysis. To run Son
 - spring integration
 - spring batch
 - Spring Cloud Contracts
-- jdk 24 garbage colector options
 - structured concurency
 - bazel build in monorepo
 - generate draw io diagram or similar
-- CDS - build - training run -first cache file and add it to the image plus Spring AOT
-- Spring buildpacks 
 - Spring debugger plugin
 
