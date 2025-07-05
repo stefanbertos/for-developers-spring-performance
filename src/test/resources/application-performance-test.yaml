@@ -8,7 +8,7 @@ spring:
 # Performance test configuration
 performance:
   test:
-    mode: production  # local or production
+    mode: local  # local or production
     production-endpoint: http://localhost:8080  # Change this to the actual production endpoint when needed
     max-execution-time-ms: 5000  # Maximum execution time in milliseconds (5 seconds)
 

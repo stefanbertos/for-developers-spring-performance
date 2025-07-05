@@ -15,20 +15,21 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class EmailServiceTest {
 
-    @Mock
-    private JavaMailSender mailSender;
+	@Mock
+	private JavaMailSender mailSender;
 
-    @InjectMocks
-    private EmailService emailService;
+	@InjectMocks
+	private EmailService emailService;
 
-    @Test
-    void sendSimpleMessage_sendsEmail() {
-        emailService.sendSimpleMessage("to@example.com", "Test Subject", "Test Body");
-        ArgumentCaptor<SimpleMailMessage> captor = ArgumentCaptor.forClass(SimpleMailMessage.class);
-        verify(mailSender).send(captor.capture());
-        SimpleMailMessage sent = captor.getValue();
-        assertThat(sent.getTo()).containsExactly("to@example.com");
-        assertThat(sent.getSubject()).isEqualTo("Test Subject");
-        assertThat(sent.getText()).isEqualTo("Test Body");
-    }
+	@Test
+	void sendSimpleMessage_sendsEmail() {
+		emailService.sendSimpleMessage("to@example.com", "Test Subject", "Test Body");
+		ArgumentCaptor<SimpleMailMessage> captor = ArgumentCaptor.forClass(SimpleMailMessage.class);
+		verify(mailSender).send(captor.capture());
+		SimpleMailMessage sent = captor.getValue();
+		assertThat(sent.getTo()).containsExactly("to@example.com");
+		assertThat(sent.getSubject()).isEqualTo("Test Subject");
+		assertThat(sent.getText()).isEqualTo("Test Body");
+	}
+
 }
