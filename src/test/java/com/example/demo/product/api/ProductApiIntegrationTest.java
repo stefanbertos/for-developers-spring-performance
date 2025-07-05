@@ -41,7 +41,7 @@ class ProductApiIntegrationTest {
 			.andExpect(jsonPath("$.id").isNumber())
 			.andExpect(jsonPath("$.name").value(createRequest.name()))
 			.andExpect(jsonPath("$.description").value(createRequest.description()))
-			.andExpect(jsonPath("$.price").value(createRequest.price().doubleValue()))
+			.andExpect(jsonPath("$.priceUSD").value(createRequest.price().doubleValue()))
 			.andExpect(jsonPath("$.category").value(createRequest.category()))
 			.andExpect(jsonPath("$.imageUrl").value(createRequest.imageUrl()))
 			.andExpect(jsonPath("$.available").value(createRequest.available()))
@@ -90,7 +90,7 @@ class ProductApiIntegrationTest {
 			.andExpect(jsonPath("$.id").value(productId))
 			.andExpect(jsonPath("$.name").value(updateRequest.name()))
 			.andExpect(jsonPath("$.description").value(updateRequest.description()))
-			.andExpect(jsonPath("$.price").value(updateRequest.price().doubleValue()))
+			.andExpect(jsonPath("$.priceUSD").value(updateRequest.price().doubleValue()))
 			.andExpect(jsonPath("$.category").value(updateRequest.category()))
 			.andExpect(jsonPath("$.imageUrl").value(updateRequest.imageUrl()))
 			.andExpect(jsonPath("$.available").value(updateRequest.available()));

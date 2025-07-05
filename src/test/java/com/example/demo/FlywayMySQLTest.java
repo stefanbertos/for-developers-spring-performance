@@ -37,7 +37,6 @@ class FlywayMySQLTest extends MySQLTestContainer {
 		}
 		catch (Exception e) {
 			System.out.println("[DEBUG_LOG] Exception occurred: " + e.getMessage());
-			e.printStackTrace();
 			throw e;
 		}
 	}

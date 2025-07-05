@@ -32,7 +32,6 @@ class MySQLContainerTest extends MySQLTestContainer {
 		}
 		catch (Exception e) {
 			System.out.println("[DEBUG_LOG] Exception occurred: " + e.getMessage());
-			e.printStackTrace();
 			throw new RuntimeException("Failed to create test table", e);
 		}
 	}
