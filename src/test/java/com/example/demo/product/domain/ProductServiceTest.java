@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -60,12 +62,10 @@ class ProductServiceTest {
 				"Test Category", "https://example.com/test.jpg", true);
 
 		// Setup currency exchange service mock
-		// Assuming EUR to USD rate is 1.1 (1 EUR = 1.1 USD)
-		lenient().when(currencyExchangeService.convertUsdToEur(any(BigDecimal.class))).thenAnswer(invocation -> {
-			BigDecimal usdAmount = invocation.getArgument(0);
-			// Convert USD to EUR (divide by 1.1)
-			return usdAmount.divide(new BigDecimal("1.1"), 2, BigDecimal.ROUND_HALF_UP);
-		});
+		// Assuming USD to EUR rate is 0.91 (1 USD = 0.91 EUR)
+		lenient().when(currencyExchangeService.getExchangeRate(eq("USD"), eq("EUR")))
+			.thenReturn(new BigDecimal("0.91"));
+		lenient().when(currencyExchangeService.getExchangeRate(eq("EUR"), eq("USD"))).thenReturn(new BigDecimal("1.1"));
 	}
 
 	@Test
@@ -84,10 +84,10 @@ class ProductServiceTest {
 		ProductResponse productResponse = result.getContent().get(0);
 		assertThat(productResponse.name()).isEqualTo(product.getName());
 		assertThat(productResponse.priceUSD()).isEqualTo(product.getPrice());
-		assertThat(productResponse.priceEUR())
-			.isEqualTo(product.getPrice().divide(new BigDecimal("1.1"), 2, BigDecimal.ROUND_HALF_UP));
+		assertThat(productResponse.priceEUR()).isEqualTo(product.getPrice()
+			.divide(currencyExchangeService.getExchangeRate("USD", "EUR"), 2, RoundingMode.HALF_UP));
 		verify(productRepository).findAll(pageable);
-		verify(currencyExchangeService).convertUsdToEur(product.getPrice());
+		verify(currencyExchangeService, atLeastOnce()).getExchangeRate(eq("USD"), eq("EUR"));
 	}
 
 	@Test
@@ -107,10 +107,10 @@ class ProductServiceTest {
 		ProductResponse productResponse = result.getContent().get(0);
 		assertThat(productResponse.category()).isEqualTo(category);
 		assertThat(productResponse.priceUSD()).isEqualTo(product.getPrice());
-		assertThat(productResponse.priceEUR())
-			.isEqualTo(product.getPrice().divide(new BigDecimal("1.1"), 2, BigDecimal.ROUND_HALF_UP));
+		assertThat(productResponse.priceEUR()).isEqualTo(product.getPrice()
+			.divide(currencyExchangeService.getExchangeRate("USD", "EUR"), 2, RoundingMode.HALF_UP));
 		verify(productRepository).findByCategory(category, pageable);
-		verify(currencyExchangeService).convertUsdToEur(product.getPrice());
+		verify(currencyExchangeService, atLeastOnce()).getExchangeRate(eq("USD"), eq("EUR"));
 	}
 
 	@Test
@@ -130,10 +130,10 @@ class ProductServiceTest {
 		ProductResponse productResponse = result.getContent().get(0);
 		assertThat(productResponse.name()).contains(name);
 		assertThat(productResponse.priceUSD()).isEqualTo(product.getPrice());
-		assertThat(productResponse.priceEUR())
-			.isEqualTo(product.getPrice().divide(new BigDecimal("1.1"), 2, BigDecimal.ROUND_HALF_UP));
+		assertThat(productResponse.priceEUR()).isEqualTo(product.getPrice()
+			.divide(currencyExchangeService.getExchangeRate("USD", "EUR"), 2, RoundingMode.HALF_UP));
 		verify(productRepository).findByNameContainingIgnoreCase(name, pageable);
-		verify(currencyExchangeService).convertUsdToEur(product.getPrice());
+		verify(currencyExchangeService, atLeastOnce()).getExchangeRate(eq("USD"), eq("EUR"));
 	}
 
 	@Test
@@ -149,10 +149,10 @@ class ProductServiceTest {
 		assertThat(result).isNotNull();
 		assertThat(result.id()).isEqualTo(id);
 		assertThat(result.priceUSD()).isEqualTo(product.getPrice());
-		assertThat(result.priceEUR())
-			.isEqualTo(product.getPrice().divide(new BigDecimal("1.1"), 2, BigDecimal.ROUND_HALF_UP));
+		assertThat(result.priceEUR()).isEqualTo(product.getPrice()
+			.divide(currencyExchangeService.getExchangeRate("USD", "EUR"), 2, RoundingMode.HALF_UP));
 		verify(productRepository).findById(id);
-		verify(currencyExchangeService).convertUsdToEur(product.getPrice());
+		verify(currencyExchangeService, atLeastOnce()).getExchangeRate(eq("USD"), eq("EUR"));
 	}
 
 	@Test
@@ -180,11 +180,11 @@ class ProductServiceTest {
 		assertThat(result).isNotNull();
 		assertThat(result.name()).isEqualTo(productRequest.name());
 		assertThat(result.priceUSD()).isEqualTo(product.getPrice());
-		assertThat(result.priceEUR())
-			.isEqualTo(product.getPrice().divide(new BigDecimal("1.1"), 2, BigDecimal.ROUND_HALF_UP));
+		assertThat(result.priceEUR()).isEqualTo(product.getPrice()
+			.divide(currencyExchangeService.getExchangeRate("USD", "EUR"), 2, RoundingMode.HALF_UP));
 		verify(productRepository).findByNameIgnoreCase(productRequest.name());
 		verify(productRepository).save(any(Product.class));
-		verify(currencyExchangeService).convertUsdToEur(product.getPrice());
+		verify(currencyExchangeService, atLeastOnce()).getExchangeRate(eq("USD"), eq("EUR"));
 	}
 
 	@Test
@@ -215,12 +215,12 @@ class ProductServiceTest {
 		assertThat(result).isNotNull();
 		assertThat(result.id()).isEqualTo(id);
 		assertThat(result.priceUSD()).isEqualTo(product.getPrice());
-		assertThat(result.priceEUR())
-			.isEqualTo(product.getPrice().divide(new BigDecimal("1.1"), 2, BigDecimal.ROUND_HALF_UP));
+		assertThat(result.priceEUR()).isEqualTo(product.getPrice()
+			.divide(currencyExchangeService.getExchangeRate("USD", "EUR"), 2, RoundingMode.HALF_UP));
 		verify(productRepository).findById(id);
 		verify(productRepository).findByNameIgnoreCase(productRequest.name());
 		verify(productRepository).save(any(Product.class));
-		verify(currencyExchangeService).convertUsdToEur(product.getPrice());
+		verify(currencyExchangeService, atLeastOnce()).getExchangeRate(eq("USD"), eq("EUR"));
 	}
 
 	@Test

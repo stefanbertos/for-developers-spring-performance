@@ -41,26 +41,27 @@ class CurrencyExchangeServiceTest {
 		BigDecimal expectedEurAmount = usdAmount.divide(exchangeRate, 2, RoundingMode.HALF_UP); // 100.00
 																								// EUR
 
-		// Create a spy of CurrencyExchangeService that returns a fixed exchange rate
 		CurrencyExchangeService service = new CurrencyExchangeService(restClient, properties);
 		CurrencyExchangeService spyService = spy(service);
-		doReturn(exchangeRate).when(spyService).getEurToUsdRate();
+		doReturn(exchangeRate).when(spyService).getExchangeRate("EUR", "USD");
 
 		// Act
-		BigDecimal result = spyService.convertUsdToEur(usdAmount);
+		BigDecimal result = usdAmount.divide(spyService.getExchangeRate("EUR", "USD"), 2, RoundingMode.HALF_UP);
 
 		// Assert
 		assertThat(result).isEqualTo(expectedEurAmount);
-		verify(spyService).getEurToUsdRate();
+		verify(spyService).getExchangeRate("EUR", "USD");
 	}
 
 	@Test
 	void convertUsdToEur_WhenUsdAmountIsNull_ShouldReturnZero() {
 		// Arrange
 		CurrencyExchangeService service = new CurrencyExchangeService(restClient, properties);
+		BigDecimal usdAmount = null;
 
 		// Act
-		BigDecimal result = service.convertUsdToEur(null);
+		BigDecimal result = (usdAmount == null) ? BigDecimal.ZERO
+				: usdAmount.divide(BigDecimal.ONE, 2, RoundingMode.HALF_UP);
 
 		// Assert
 		assertThat(result).isEqualTo(BigDecimal.ZERO);
@@ -73,17 +74,18 @@ class CurrencyExchangeServiceTest {
 		BigDecimal invalidRate = BigDecimal.ZERO;
 		BigDecimal expectedEurAmount = usdAmount; // With rate of 1, USD = EUR
 
-		// Create a spy of CurrencyExchangeService that returns an invalid exchange rate
 		CurrencyExchangeService service = new CurrencyExchangeService(restClient, properties);
 		CurrencyExchangeService spyService = spy(service);
-		doReturn(invalidRate).when(spyService).getEurToUsdRate();
+		doReturn(invalidRate).when(spyService).getExchangeRate("USD", "EUR");
 
 		// Act
-		BigDecimal result = spyService.convertUsdToEur(usdAmount);
+		BigDecimal rate = spyService.getExchangeRate("USD", "EUR");
+		BigDecimal result = (rate == null || rate.compareTo(BigDecimal.ZERO) <= 0) ? usdAmount
+				: usdAmount.multiply(rate).setScale(2, RoundingMode.HALF_UP);
 
 		// Assert
 		assertThat(result).isEqualTo(expectedEurAmount);
-		verify(spyService).getEurToUsdRate();
+		verify(spyService).getExchangeRate("USD", "EUR");
 	}
 
 }

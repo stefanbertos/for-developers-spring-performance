@@ -62,7 +62,7 @@ class ProductResponseTest {
 		when(product.getUpdatedAt()).thenReturn(now);
 
 		CurrencyExchangeService currencyExchangeService = mock(CurrencyExchangeService.class);
-		when(currencyExchangeService.convertUsdToEur(any(BigDecimal.class))).thenReturn(new BigDecimal("90.90"));
+		when(currencyExchangeService.getExchangeRate("USD", "EUR")).thenReturn(new BigDecimal("1.1"));
 
 		// Act
 		ProductResponse response = ProductResponse.fromEntity(product, currencyExchangeService);
@@ -73,7 +73,8 @@ class ProductResponseTest {
 		assertThat(response.name()).isEqualTo("Test Product");
 		assertThat(response.description()).isEqualTo("Test Description");
 		assertThat(response.priceUSD()).isEqualTo(new BigDecimal("99.99"));
-		assertThat(response.priceEUR()).isEqualTo(new BigDecimal("90.90"));
+		assertThat(response.priceEUR())
+			.isEqualTo(new BigDecimal("99.99").divide(new BigDecimal("1.1"), 2, java.math.RoundingMode.HALF_UP));
 		assertThat(response.category()).isEqualTo("Test Category");
 		assertThat(response.imageUrl()).isEqualTo("https://example.com/test.jpg");
 		assertThat(response.available()).isTrue();
