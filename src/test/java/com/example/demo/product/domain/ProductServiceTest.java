@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,7 +86,7 @@ class ProductServiceTest {
 		assertThat(productResponse.priceEUR()).isEqualTo(product.getPrice()
 			.divide(currencyExchangeService.getExchangeRate("USD", "EUR"), 2, RoundingMode.HALF_UP));
 		verify(productRepository).findAll(pageable);
-		verify(currencyExchangeService, atLeastOnce()).getExchangeRate(eq("USD"), eq("EUR"));
+		verify(currencyExchangeService, atLeastOnce()).getExchangeRate("USD", "EUR");
 	}
 
 	@Test
@@ -110,7 +109,7 @@ class ProductServiceTest {
 		assertThat(productResponse.priceEUR()).isEqualTo(product.getPrice()
 			.divide(currencyExchangeService.getExchangeRate("USD", "EUR"), 2, RoundingMode.HALF_UP));
 		verify(productRepository).findByCategory(category, pageable);
-		verify(currencyExchangeService, atLeastOnce()).getExchangeRate(eq("USD"), eq("EUR"));
+		verify(currencyExchangeService, atLeastOnce()).getExchangeRate("USD", "EUR");
 	}
 
 	@Test
@@ -133,7 +132,7 @@ class ProductServiceTest {
 		assertThat(productResponse.priceEUR()).isEqualTo(product.getPrice()
 			.divide(currencyExchangeService.getExchangeRate("USD", "EUR"), 2, RoundingMode.HALF_UP));
 		verify(productRepository).findByNameContainingIgnoreCase(name, pageable);
-		verify(currencyExchangeService, atLeastOnce()).getExchangeRate(eq("USD"), eq("EUR"));
+		verify(currencyExchangeService, atLeastOnce()).getExchangeRate("USD", "EUR");
 	}
 
 	@Test
@@ -152,7 +151,7 @@ class ProductServiceTest {
 		assertThat(result.priceEUR()).isEqualTo(product.getPrice()
 			.divide(currencyExchangeService.getExchangeRate("USD", "EUR"), 2, RoundingMode.HALF_UP));
 		verify(productRepository).findById(id);
-		verify(currencyExchangeService, atLeastOnce()).getExchangeRate(eq("USD"), eq("EUR"));
+		verify(currencyExchangeService, atLeastOnce()).getExchangeRate("USD", "EUR");
 	}
 
 	@Test
@@ -184,7 +183,7 @@ class ProductServiceTest {
 			.divide(currencyExchangeService.getExchangeRate("USD", "EUR"), 2, RoundingMode.HALF_UP));
 		verify(productRepository).findByNameIgnoreCase(productRequest.name());
 		verify(productRepository).save(any(Product.class));
-		verify(currencyExchangeService, atLeastOnce()).getExchangeRate(eq("USD"), eq("EUR"));
+		verify(currencyExchangeService, atLeastOnce()).getExchangeRate("USD", "EUR");
 	}
 
 	@Test
@@ -220,7 +219,7 @@ class ProductServiceTest {
 		verify(productRepository).findById(id);
 		verify(productRepository).findByNameIgnoreCase(productRequest.name());
 		verify(productRepository).save(any(Product.class));
-		verify(currencyExchangeService, atLeastOnce()).getExchangeRate(eq("USD"), eq("EUR"));
+		verify(currencyExchangeService, atLeastOnce()).getExchangeRate("USD", "EUR");
 	}
 
 	@Test

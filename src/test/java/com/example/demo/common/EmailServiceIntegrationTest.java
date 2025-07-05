@@ -45,7 +45,7 @@ class EmailServiceIntegrationTest {
 		assertThat(receivedMessages).hasSize(1);
 		MimeMessage received = receivedMessages[0];
 		assertThat(received.getSubject()).isEqualTo(subject);
-		assertThat(received.getAllRecipients()[0].toString()).isEqualTo(to);
+		assertThat(received.getAllRecipients()[0].toString()).hasToString(to);
 		assertThat(received.getContent().toString()).contains(text);
 	}
 

@@ -36,7 +36,7 @@ class ProductRequestTest {
 		assertThat(request.description()).isEqualTo("Test Description");
 		assertThat(request.price()).isEqualTo(new BigDecimal("99.99"));
 		assertThat(request.category()).isEqualTo("Uncategorized");
-		assertThat(request.imageUrl()).isEqualTo("");
+		assertThat(request.imageUrl()).isEmpty();
 		assertThat(request.available()).isTrue();
 	}
 
