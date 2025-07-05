@@ -52,7 +52,7 @@ dependencies {
 
 	// Distributed tracing
 	implementation 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter'
-	implementation 'com.github.loki4j:loki-logback-appender:1.4.2'
+	implementation 'com.github.loki4j:loki-logback-appender:2.0.0'
 	implementation 'io.micrometer:micrometer-registry-prometheus'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
